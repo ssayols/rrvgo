@@ -1,4 +1,4 @@
-#' calcSimilarityScores
+#' calculateSimMatrix
 #' Calculate the score similarity matrix between terms
 #' 
 #' @param goterms vector of GO terms

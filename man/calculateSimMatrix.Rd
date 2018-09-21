@@ -2,7 +2,7 @@
 % Please edit documentation in R/RVGO.R
 \name{calculateSimMatrix}
 \alias{calculateSimMatrix}
-\title{calcSimilarityScores
+\title{calculateSimMatrix
 Calculate the score similarity matrix between terms}
 \usage{
 calculateSimMatrix(x, orgdb, semdata = GOSemSim::godata(orgdb, ont =
@@ -28,7 +28,7 @@ c("Resnik", "Lin", "Rel", "Jiang", "Wang")}
 a square matrix with similarity scores between terms
 }
 \description{
-calcSimilarityScores
+calculateSimMatrix
 Calculate the score similarity matrix between terms
 }
 \examples{
