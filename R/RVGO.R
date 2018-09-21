@@ -97,7 +97,7 @@ reduceSimMatrix <- function(simMatrix, scores=NULL, threshold, orgdb) {
   data.frame(go=rownames(simMatrix),
              parent=parent,
              scores=scores[match(rownames(simMatrix), names(scores))],
-             size=sizes[match(rownames(simMatrix), names(scores))],
+             size=sizes[match(rownames(simMatrix), names(sizes))],
              term=getGoTerm(rownames(simMatrix)))
 }
 
