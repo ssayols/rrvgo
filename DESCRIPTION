@@ -1,0 +1,40 @@
+Package: RVGO
+Type: Package
+Title: Reduce + Visualize GO (a la REVIGO)
+Version: 1.0
+Date: 2018-09-14
+Author: Sergi Sayols
+Maintainer: Sergi Sayols <sergisayolspuig@gmail.com>
+Description: Mimic what REVIGO does, but making use of what Bioconductor provides
+License: GPL3
+LazyData: TRUE
+Imports: GOSemSim,
+         AnnotationDbi,
+         GO.db
+Suggests: knitr,
+          rmarkdown,
+          testthat,
+          pheatmap,
+          wordcloud2,
+          treemap,
+          ggplot2,
+          org.Ag.eg.db,
+          org.At.tair.db,
+          org.Bt.eg.db,
+          org.Ce.eg.db,
+          org.Cf.eg.db,
+          org.Dm.eg.db,
+          org.Dr.eg.db,
+          org.EcK12.eg.db,
+          org.EcSakai.eg.db,
+          org.Gg.eg.db,
+          org.Hs.eg.db,
+          org.Mm.eg.db,
+          org.Mmu.eg.db,
+          org.Pf.plasmo.db,
+          org.Pt.eg.db,
+          org.Rn.eg.db,
+          org.Sc.sgd.db,
+          org.Ss.eg.db,
+          org.Xl.eg.db
+VignetteBuilder: knitr
