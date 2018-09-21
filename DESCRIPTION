@@ -38,3 +38,4 @@ Suggests: knitr,
           org.Ss.eg.db,
           org.Xl.eg.db
 VignetteBuilder: knitr
+RoxygenNote: 6.1.0

@@ -10,10 +10,10 @@
 #'   c("Resnik", "Lin", "Rel", "Jiang", "Wang")
 #' @param verbose be explicit while dropping GO terms not found in orgdb
 #' @return a square matrix with similarity scores between terms
-#' @example
+#' @examples
 #' go_analysis <- read.delim(system.file("extdata/example2.txt", package="RVGO"))
 #' simMatrix <- calculateSimMatrix(go_analysis$V1, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
-#' @import GOSemSim
+#' @importFrom GOSemSim godata goSim
 #' @export
 calculateSimMatrix <- function(x, orgdb,
                                semdata=GOSemSim::godata(orgdb, ont=ont),
@@ -59,7 +59,7 @@ calculateSimMatrix <- function(x, orgdb,
 #' @param orgdb one of org.* Bioconductor packages (the package name, or the
 #'   package itself)
 #' @return a data.frame with all terms and it's "reducer" (NA if the term was not reduced)
-#' @example
+#' @examples
 #' go_analysis <- read.delim(system.file("extdata/example2.txt", package="RVGO"))
 #' scores <- setNames(-log10(go_analysis$V2), go_analysis$V1)
 #' simMatrix <- calculateSimMatrix(go_analysis$V1, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
@@ -107,7 +107,7 @@ reduceSimMatrix <- function(simMatrix, scores=NULL, threshold, orgdb) {
 #' @param terms GO terms
 #' @param orgdb one of org.* Bioconductor packages (the package name, or the
 #'   package itself)
-#' @import AnnotationDbi
+#' @importFrom AnnotationDbi select keys
 #' @return number of genes associated with each term
 getGoSize <- function(terms, orgdb) {
   if(class(orgdb) != "OrgDb") {
