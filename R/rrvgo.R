@@ -11,7 +11,7 @@
 #' @param verbose be explicit while dropping GO terms not found in orgdb
 #' @return a square matrix with similarity scores between terms
 #' @examples
-#' go_analysis <- read.delim(system.file("extdata/example2.txt", package="RVGO"))
+#' go_analysis <- read.delim(system.file("extdata/example2.txt", package="rrvgo"))
 #' simMatrix <- calculateSimMatrix(go_analysis$V1, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 #' @importFrom GOSemSim godata goSim
 #' @export
@@ -60,7 +60,7 @@ calculateSimMatrix <- function(x, orgdb,
 #'   package itself)
 #' @return a data.frame with all terms and it's "reducer" (NA if the term was not reduced)
 #' @examples
-#' go_analysis <- read.delim(system.file("extdata/example2.txt", package="RVGO"))
+#' go_analysis <- read.delim(system.file("extdata/example2.txt", package="rrvgo"))
 #' scores <- setNames(-log10(go_analysis$V2), go_analysis$V1)
 #' simMatrix <- calculateSimMatrix(go_analysis$V1, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 #' reduced_go_analysis <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")

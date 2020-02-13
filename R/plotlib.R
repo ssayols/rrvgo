@@ -8,7 +8,7 @@
 #' @details  Distances between points represent the similarity between terms.
 #' Axes are the first 2 components of applying a PCA to the similarity matrix. 
 #' @examples
-#' go_analysis <- read.delim(system.file("extdata/example2.txt", package="RVGO"), head=FALSE)
+#' go_analysis <- read.delim(system.file("extdata/example2.txt", package="rrvgo"), head=FALSE)
 #' simMatrix <- calculateSimMatrix(go_analysis$V1, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 #' reduced_go_analysis <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
 #' scatterPlot(simMatrix, reduced_go_analysis)
@@ -26,7 +26,7 @@ scatterPlot <- function(simMatrix, reducedTerms, label=FALSE, pal=NULL) {
 #' @details  Distances between points represent the similarity between terms.
 #' Axes are the first 2 components of applying a PCA to the similarity matrix.
 #' @examples
-#' go_analysis <- read.delim(system.file("extdata/example2.txt", package="RVGO"), head=FALSE)
+#' go_analysis <- read.delim(system.file("extdata/example2.txt", package="rrvgo"), head=FALSE)
 #' simMatrix <- calculateSimMatrix(go_analysis$V1, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 #' reduced_go_analysis <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
 #' treemapPlot(simMatrix, reduced_go_analysis)
@@ -41,7 +41,7 @@ treemapPlot <- function(simMatrix, reducedTerms, label=FALSE, pal=NULL) {
 #' @param onlyParents use only parent terms to calculate frequencies.
 #' @param pal use custom palette.
 #' @examples
-#' go_analysis <- read.delim(system.file("extdata/example2.txt", package="RVGO"), head=FALSE)
+#' go_analysis <- read.delim(system.file("extdata/example2.txt", package="rrvgo"), head=FALSE)
 #' scores <- setNames(-log10(go_analysis$V2), go_analysis$V1)
 #' simMatrix <- calculateSimMatrix(go_analysis$V1, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 #' reduced_go_analysis <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")

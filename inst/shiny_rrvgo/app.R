@@ -1,14 +1,14 @@
 library(shiny)
 library(shinydashboard)
 library(DT)
-library(RVGO)
+library(rrvgo)
 
 shinyApp(
   #
   # Define UI -------
   #
   ui=dashboardPage(
-    dashboardHeader(title="RVGO: Reduce+Viz GO"),
+    dashboardHeader(title="rrvgo: reduce + visualize GO"),
     dashboardSidebar(disable=TRUE),
     dashboardBody(
       fluidRow(

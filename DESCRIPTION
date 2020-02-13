@@ -1,4 +1,4 @@
-Package: RVGO
+Package: rrvgo
 Type: Package
 Title: Reduce + Visualize GO (a la REVIGO)
 Version: 1.0
