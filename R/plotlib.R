@@ -142,7 +142,7 @@ heatmapPlot <- function(simMatrix, reducedTerms=NULL, annotateParent=FALSE, anno
   }
   
   if(annotateParent && !is.null(reducedTerms)) {
-    reducedTerms$ann <- reducedTerms$term[match(reducedTerms$parent, reducedTerms[, annotationLabel])]
+    reducedTerms$ann <- reducedTerms[match(reducedTerms$parent, reducedTerms$go), annotationLabel]
     ann <- data.frame(parent=reducedTerms$ann[match(rownames(simMatrix), reducedTerms$go)],
                       row.names=rownames(simMatrix))
     pheatmap::pheatmap(simMatrix, annotation_row=ann, ...)
