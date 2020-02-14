@@ -8,18 +8,16 @@
 #' @param ont ontlogy. One of c("BP", "MF", "CC")
 #' @param method distance method. One of the supported methods by GOSemSim:
 #'   c("Resnik", "Lin", "Rel", "Jiang", "Wang")
-#' @param verbose be explicit while dropping GO terms not found in orgdb
 #' @return a square matrix with similarity scores between terms
 #' @examples
-#' go_analysis <- read.delim(system.file("extdata/example2.txt", package="rrvgo"))
-#' simMatrix <- calculateSimMatrix(go_analysis$V1, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
+#' go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
+#' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 #' @importFrom GOSemSim godata goSim
 #' @export
 calculateSimMatrix <- function(x, orgdb,
                                semdata=GOSemSim::godata(orgdb, ont=ont),
                                ont=c("BP", "MF", "CC"),
-                               method=c("Resnik", "Lin", "Rel", "Jiang", "Wang"),
-                               verbose=TRUE) {
+                               method=c("Resnik", "Lin", "Rel", "Jiang", "Wang")) {
  
   # check function args
   ont <- match.arg(ont) 
@@ -33,14 +31,24 @@ calculateSimMatrix <- function(x, orgdb,
   # filter GO terms not in orgdb
   x <- unique(x)
   found <- x %in% names(semdata@IC)
-  if(verbose) {
-    warning("Removed ", length(x) - sum(found), " terms not found in orgdb for ", ont)
+  hasAncestor <- !is.na(sapply(x, function(x) tryCatch(GOSemSim:::getAncestors(ont)[x], error=function(e) NA)))
+  if(all(!found)) {
+    warning("No terms were found in orgdb for ", ont,
+            "\nCheck that the organism and ontology match the ones provided by orgdb")
+    return(NA)
+  } else if(!all(found)) {
+    warning("Removed ", length(x) - sum(found), " terms that were not found in orgdb for ", ont)
   }
-  x <- x[found]
+  x <- x[found & hasAncestor]
+  
  
   # return the similarity matrix
-  matrix(GOSemSim::goSim(x, x, semData=semdata, measure=method),
-         ncol=length(x), dimnames=list(x, x))
+  m <- matrix(GOSemSim::goSim(x, x, semData=semdata, measure=method),
+              ncol=length(x), dimnames=list(x, x))
+  
+  # removing terms which the similarity couldn't be calculated
+  out <- apply(m, 2, function(x) all(is.na(x)))
+  m[!out, !out]
 }
 
 #' reduceSimMatrix
@@ -53,25 +61,33 @@ calculateSimMatrix <- function(x, orgdb,
 #' 
 #' @param simMatrix a (square) similarity matrix
 #' @param scores *named* vector with scores (weights) assigned to each term.
-#'   Higher is better. Can be NULL (default, means no scores). Note: if you have
+#'   Higher is better. Can be NULL (default, means no scores. In this case, a default score
+#'   based on set size is assigned, thus favoring larger sets). Note: if you have
 #'   p-values as scores, consider -1*log-transforming them (`-log(p)`)
-#' @param threshold similarity threshold
+#' @param threshold similarity threshold (0-1). Some guidance:
+#'  Large (allowed similarity=0.9), Medium (0.7), Small (0.5), Tiny (0.4)
+#'  Defaults to Medium (0.7)
 #' @param orgdb one of org.* Bioconductor packages (the package name, or the
-#'   package itself)
+#'   orgdb object itself)
 #' @return a data.frame with all terms and it's "reducer" (NA if the term was not reduced)
 #' @examples
-#' go_analysis <- read.delim(system.file("extdata/example2.txt", package="rrvgo"))
-#' scores <- setNames(-log10(go_analysis$V2), go_analysis$V1)
-#' simMatrix <- calculateSimMatrix(go_analysis$V1, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
+#' go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
+#' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
+#' scores <- setNames(-log10(go_analysis$qvalue), go_analysis$ID)
 #' reduced_go_analysis <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
 #' @export
-reduceSimMatrix <- function(simMatrix, scores=NULL, threshold, orgdb) {
+reduceSimMatrix <- function(simMatrix, scores=NULL, threshold=0.7, orgdb) {
  
   # check function arguments
   if(!is.null(scores) && !all(rownames(simMatrix) %in% names(scores))) {
     stop("scores vector does not contain all terms in the similarity matrix")
   }
   scores <- scores[match(rownames(simMatrix), names(scores))]
+  
+  # reorder the similarity matrix as in the scores, just in case they don't come in the same order
+  orows <- match(rownames(simMatrix), names(scores))
+  ocols <- match(colnames(simMatrix), names(scores))
+  simMatrix <- simMatrix[orows, ocols]
   
   # get category size, and use it as scores if they were not provided
   sizes <- getGoSize(rownames(simMatrix), orgdb)
@@ -80,23 +96,20 @@ reduceSimMatrix <- function(simMatrix, scores=NULL, threshold, orgdb) {
   }
   
   # sort matrix based on the score
-  orows <- match(rownames(simMatrix), names(scores))
-  ocols <- match(colnames(simMatrix), names(scores))  # JIC don't come in order
-  simMatrix <- simMatrix[orows, ocols]
   o <- rev(order(scores, sizes, na.last=FALSE))
   simMatrix <- simMatrix[o, o]
   
-  # for each term find other terms above similarity threshold
-  parent <- character(nrow(simMatrix))
-  for(i in (nrow(simMatrix)-1):1) {
-    similar <- which(simMatrix[i, (i+1):ncol(simMatrix)] > threshold)
-    parent[i+similar] <- rownames(simMatrix)[i]
-  }
+  # cluster terms and cut the tree at the desired threshold.
+  # Then find the term with the highest score as the representative of each cluster
+  cluster <- cutree(hclust(as.dist(1-simMatrix)), h=threshold)
+  clusterRep <- tapply(rownames(simMatrix), cluster, function(x) x[which.max(scores[x])])
   
   # return
   data.frame(go=rownames(simMatrix),
-             parent=parent,
-             scores=scores[match(rownames(simMatrix), names(scores))],
+             cluster=cluster,
+             parent=clusterRep[cluster],
+             parentSimScore=unlist(Map(1:nrow(simMatrix), clusterRep[cluster], f=function(i, j) simMatrix[i, j])),
+             score=scores[match(rownames(simMatrix), names(scores))],
              size=sizes[match(rownames(simMatrix), names(sizes))],
              term=getGoTerm(rownames(simMatrix)))
 }

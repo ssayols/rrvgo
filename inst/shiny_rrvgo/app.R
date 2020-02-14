@@ -3,12 +3,32 @@ library(shinydashboard)
 library(DT)
 library(rrvgo)
 
+orgdb <- c(Anopheles="org.Ag.eg.db",
+           Arabidopsis="org.At.tair.db",
+           Bovine="org.Bt.eg.db",
+           Worm="org.Ce.eg.db",
+           Canine="org.Cf.eg.db",
+           Fly="org.Dm.eg.db",
+           Zebrafish="org.Dr.eg.db",
+           `E coli strain K12`="org.EcK12.eg.db",
+           `E coli strain Sakai`="org.EcSakai.eg.db",
+           Chicken="org.Gg.eg.db",
+           Human="org.Hs.eg.db",
+           Mouse="org.Mm.eg.db",
+           Rhesus="org.Mmu.eg.db",
+           Malaria="org.Pf.plasmo.db",
+           Chimp="org.Pt.eg.db",
+           Rat="org.Rn.eg.db",
+           Yeast="org.Sc.sgd.db",
+           Pig="org.Ss.eg.db",
+           Xenopus="org.Xl.eg.db")
+
 shinyApp(
   #
   # Define UI -------
   #
   ui=dashboardPage(
-    dashboardHeader(title="rrvgo: reduce + visualize GO"),
+    dashboardHeader(title="rrvgo: reduce + visualize GO", titleWidth=300),
     dashboardSidebar(disable=TRUE),
     dashboardBody(
       fluidRow(
@@ -33,45 +53,30 @@ shinyApp(
         column(width=3,
           box(width=NULL, title="GO terms", status="warning",
             textAreaInput("goterms", label="Paste here the GO terms", height="200px",
-                          value=paste("# Columns are <space> separated.",
+                          value=paste("# Columns are <space> or <tab> separated.",
                                       "# First column is mandatory and must contain valid GO ids (GO:0009268).",
                                       "# Second column is optional and should contain scores (higher is better.",
-                                      "# Other columns are ignored.", sep="\n")
+                                      "# Other columns are ignored.",
+                                      "# Lines starting with '#' are ignored", sep="\n")
             ),
             hr(),
-            actionLink("reduce", "Reduce!")
+            fluidRow(column(6, actionLink("reduce", "Reduce!")),
+                     column(6, actionLink("example", "example"), align="right"),
+            ),
           ),
           box(width=NULL, title="Options", status="warning",
-            selectInput("organism", label="Organism", selected=1,
-                        choices=c(Anopheles="org.Ag.eg.db",
-                                  Arabidopsis="org.At.tair.db",
-                                  Bovine="org.Bt.eg.db",
-                                  Worm="org.Ce.eg.db",
-                                  Canine="org.Cf.eg.db",
-                                  Fly="org.Dm.eg.db",
-                                  Zebrafish="org.Dr.eg.db",
-                                  `E coli strain K12`="org.EcK12.eg.db",
-                                  `E coli strain Sakai`="org.EcSakai.eg.db",
-                                  Chicken="org.Gg.eg.db",
-                                  Human="org.Hs.eg.db",
-                                  Mouse="org.Mm.eg.db",
-                                  Rhesus="org.Mmu.eg.db",
-                                  Malaria="org.Pf.plasmo.db",
-                                  Chimp="org.Pt.eg.db",
-                                  Rat="org.Rn.eg.db",
-                                  Yeast="org.Sc.sgd.db",
-                                  Pig="org.Ss.eg.db",
-                                  Xenopus="org.Xl.eg.db")),
-            selectInput("ontology", label="Ontology", selected=1,
+            selectInput("organism", label="Organism", selected="org.Hs.eg.db",
+                        choices=orgdb[order(names(orgdb))]),
+            selectInput("ontology", label="Ontology", selected="BP",
                         choices=c(`Biologiocal Process`="BP",
                                   `Molecular Function`="MF",
                                   `Cellular Compartment`="CC")),
-            selectInput("stringency", label="Stringency", selected=2,
+            selectInput("stringency", label="Stringency", selected="Medium",
                         choices=c(`Large (allowed similarity=0.9)`="Large",
                                   `Medium (0.7)`="Medium",
                                   `Small (0.5)`="Small",
                                   `Tiny (0.4)`="Tiny")),
-            selectInput("method", label="Distance measure", selected=1,
+            selectInput("method", label="Distance measure", selected="Rel",
                         choices=c("Resnik", "Lin", "Rel", "Jiang", "Wang")),
             a("Click to open a webpage with detailed info about these measures",
               href="http://bioconductor.org/packages/release/bioc/vignettes/GOSemSim/inst/doc/GOSemSim.htmll#semantic-similarity-measurement-based-on-go")
@@ -92,39 +97,63 @@ shinyApp(
     #
     # reactive components -----
     #
-    goterms <- eventReactive(input$Reduce, {
-      read.table(stringsAsFactors=FALSE, strip.white=TRUE, fill=TRUE,
-                 text=gsub("[\\t| ]+", "\t", input$goterms))
+    goterms <- reactiveVal()
+    observeEvent(input$reduce, {
+      print(input$reduce)
+      tryCatch({
+        goterms(read.table(stringsAsFactors=FALSE, strip.white=TRUE, fill=TRUE, text=gsub("[\\t| ]+", "\t", input$goterms)))
+      }, error=function(e) NULL
+      )
+      print(head(goterms()))
     })
     
-    simMatrix <- reactive({
-      calculateSimMatrix(goterms(), org=input$organism, ont=input$ontology, method=input$method)
-    })
+    simMatrix <- reactiveVal(
+      tryCatch(calculateSimMatrix(goterms(), org=input$organism, ont=input$ontology, method=input$method),
+               error=function(e) NULL)
+    )
 
-    reducedTable <- reactive({
-      reduceSimMatrix(simMatrix(), scores=goterms()[, 2])
-    })
+    reducedTable <- reactiveVal(
+      tryCatch(reduceSimMatrix(simMatrix(), scores=if(ncol(goterms()) > 1) goterms()[, 2] else NULL),
+               error=function(e) NULL)
+    )
       
+    observeEvent(input$example, {
+      x <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
+      x$qvalue <- -log10(x$qvalue)
+      x <- paste(apply(x[, c("ID", "qvalue")], 1, paste, collapse="\t"), collapse="\n")
+      updateTextInput(session, "goterms", value=x)
+    })
+    
     #
     # UI -----
     #
     output$simMatrixPlot <- renderPlot({
+      req(simMatrix(), cancelOutput=TRUE)
+      pheatmap::pheatmap(simMatrix())
     })
     
     output$scatterPlot <- renderPlot({
+      req(simMatrix(), reducedTable(), cancelOutput=TRUE)
+      scatterPlot(simMatrix(), reducedTable())
     })
     
     output$treemapPlot <- renderPlot({
+      req(reducedTable(), cancelOutput=TRUE)
+      treemapPlot(reducedTable())
     })
     
     output$wordcloudPlot <- renderPlot({
+      req(reducedTable(), cancelOutput=TRUE)
+      wordlcoudPlot(reducedTable())
     })
     
-    output$reducedTable <- DTOutput({
-      datatable(reduceTable(simMatrix()))
+    output$reducedTable <- renderDT({
+      req(reducedTable(), cancelOutput=TRUE)
+      datatable(reducedTable())
     })
     
-    output$simMatrix <- DTOutput({
+    output$simMatrix <- renderDT({
+      req(simMatrix(), cancelOutput=TRUE)
       datatable(simMatrix())
     })
     
