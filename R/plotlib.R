@@ -112,3 +112,25 @@ wordcloudPlot <- function(reducedTerms, onlyParents=TRUE, ...) {
   d <- data.frame(word=names(v), freq=v)
   wordcloud::wordcloud(d$word, d$freq, ...)
 }
+
+#' heatmapPlot
+#' Plot similarity matrix as a heatmap
+#' 
+#' @param simMatrix a (square) similarity matrix.
+#' @param ... other parameters sent to pheatmap::pheatmap()
+#' @details  Matrix with similarity scores between terms is represented as a heatmap.
+#' @examples
+#' go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
+#' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
+#' heatmapPlot(simMatrix)
+#' @importFrom pheatmap pheatmap
+#' @export
+heatmapPlot <- function(simMatrix, ...) {
+  
+  if(!all(sapply(c("pheatmap"), requireNamespace, quietly=TRUE))) {
+    stop("Package pheatmap and/or its dependencies not available. ",
+         "Consider installing them before using this function.", call.=FALSE)
+  }
+  
+  pheatmap::pheatmap(simMatrix, ...)
+}
