@@ -117,20 +117,37 @@ wordcloudPlot <- function(reducedTerms, onlyParents=TRUE, ...) {
 #' Plot similarity matrix as a heatmap
 #' 
 #' @param simMatrix a (square) similarity matrix.
+#' @param reducedTerms a data.frame with the reduced terms from reduceSimMatrix()
+#' @param annotateParent whether to add annotation of the parent
+#' @param annotationLabel display "go" ids or go "term" string
 #' @param ... other parameters sent to pheatmap::pheatmap()
 #' @details  Matrix with similarity scores between terms is represented as a heatmap.
 #' @examples
 #' go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 #' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
-#' heatmapPlot(simMatrix)
+#' scores <- setNames(-log10(go_analysis$qvalue), go_analysis$ID)
+#' reduced_go_analysis <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
+#' heatmapPlot(simMatrix, reduced_go_analysis, annotateParent=TRUE, annotationLabel="term", fontsize=6)
 #' @importFrom pheatmap pheatmap
 #' @export
-heatmapPlot <- function(simMatrix, ...) {
+heatmapPlot <- function(simMatrix, reducedTerms=NULL, annotateParent=FALSE, annotationLabel="go", ...) {
   
   if(!all(sapply(c("pheatmap"), requireNamespace, quietly=TRUE))) {
     stop("Package pheatmap and/or its dependencies not available. ",
          "Consider installing them before using this function.", call.=FALSE)
   }
   
-  pheatmap::pheatmap(simMatrix, ...)
+  if(annotateParent && is.null(reducedTerms)) {
+    warning("Need to provide a reducedTerms data.frame from reduceSimMatrix() to annotate the heatmap with parent terms.")
+  }
+  
+  if(annotateParent && !is.null(reducedTerms)) {
+    reducedTerms$ann <- reducedTerms$term[match(reducedTerms$parent, reducedTerms[, annotationLabel])]
+    ann <- data.frame(parent=reducedTerms$ann[match(rownames(simMatrix), reducedTerms$go)],
+                      row.names=rownames(simMatrix))
+    pheatmap::pheatmap(simMatrix, annotation_row=ann, ...)
+  } else {
+    pheatmap::pheatmap(simMatrix, ...)
+  }
+  
 }
