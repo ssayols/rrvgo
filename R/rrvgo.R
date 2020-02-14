@@ -14,7 +14,8 @@
 #' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 #' @importFrom GOSemSim godata goSim
 #' @export
-calculateSimMatrix <- function(x, orgdb,
+calculateSimMatrix <- function(x,
+                               orgdb,
                                semdata=GOSemSim::godata(orgdb, ont=ont),
                                ont=c("BP", "MF", "CC"),
                                method=c("Resnik", "Lin", "Rel", "Jiang", "Wang")) {

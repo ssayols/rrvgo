@@ -1,6 +1,8 @@
 library(shiny)
 library(shinydashboard)
 library(DT)
+library(plotly)
+library(heatmaply)
 library(rrvgo)
 
 orgdb <- c(Anopheles="org.Ag.eg.db",
@@ -34,18 +36,18 @@ shinyApp(
       fluidRow(
         column(width=9,
           tabBox(width=NULL,
-            tabPanel("simMatrixPlot", div(style='overflow-x: scroll', plotOutput("simMatrixPlot"))),
-            tabPanel("scatterPlot"  , div(style='overflow-x: scroll', plotOutput("scatterPlot"))),
+            tabPanel("simMatrixPlot", div(style='overflow-x: scroll', plotlyOutput("simMatrixPlot"))),
+            tabPanel("scatterPlot"  , div(style='overflow-x: scroll', plotlyOutput("scatterPlot"))),
             tabPanel("treemapPlot"  , div(style='overflow-x: scroll', plotOutput("treemapPlot"))),
             tabPanel("wordcloudPlot", div(style='overflow-x: scroll', plotOutput("wordcloudPlot")))
           ),
           tabBox(width=NULL,
             tabPanel("reducedTable",
-              DTOutput("reducedTable"),
+              div(style='overflow-x: scroll', DTOutput("reducedTable")),
               downloadLink("downloadReducedTable", "Download reduced table")
             ),
             tabPanel("simMatrix",
-              DTOutput("simMatrix"),
+              div(style='overflow-x: scroll', DTOutput("simMatrix")),
               downloadLink("downloadSimMatrix", "Download similarity matrix")
             )
           )
@@ -97,25 +99,29 @@ shinyApp(
     #
     # reactive components -----
     #
-    goterms <- reactiveVal()
-    observeEvent(input$reduce, {
+    goterms <- reactive({
       print(input$reduce)
-      tryCatch({
-        goterms(read.table(stringsAsFactors=FALSE, strip.white=TRUE, fill=TRUE, text=gsub("[\\t| ]+", "\t", input$goterms)))
-      }, error=function(e) NULL
-      )
-      print(head(goterms()))
+      isolate({
+        tryCatch({
+          read.table(stringsAsFactors=FALSE, strip.white=TRUE, fill=TRUE, text=gsub("[\\t| ]+", "\t", input$goterms))
+        }, error=function(e) NULL)
+      })
     })
     
-    simMatrix <- reactiveVal(
-      tryCatch(calculateSimMatrix(goterms(), org=input$organism, ont=input$ontology, method=input$method),
+    simMatrix <- reactive({
+      #validate(need(!is.null(goterms())))
+      req(!is.null(goterms()))
+      tryCatch(calculateSimMatrix(goterms()[, 1], org=input$organism, ont=input$ontology, method=input$method),
                error=function(e) NULL)
-    )
+    })
 
-    reducedTable <- reactiveVal(
-      tryCatch(reduceSimMatrix(simMatrix(), scores=if(ncol(goterms()) > 1) goterms()[, 2] else NULL),
+    reducedTable <- reactive({
+      #validate(need(!is.null(goterms())))
+      req(!is.null(goterms()))
+      scores <- if (ncol(goterms()) >  1)  setNames(goterms()[, 2], goterms()[, 1]) else NULL
+      tryCatch(reduceSimMatrix(simMatrix(), scores=scores, threshold=input$stringency, orgdb=input$organism),
                error=function(e) NULL)
-    )
+    })
       
     observeEvent(input$example, {
       x <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
@@ -127,14 +133,14 @@ shinyApp(
     #
     # UI -----
     #
-    output$simMatrixPlot <- renderPlot({
+    output$simMatrixPlot <- renderPlotly({
       req(simMatrix(), cancelOutput=TRUE)
-      pheatmap::pheatmap(simMatrix())
+      heatmaply::heatmaply(simMatrix(), plot_method="plotly")
     })
     
-    output$scatterPlot <- renderPlot({
+    output$scatterPlot <- renderPlotly({
       req(simMatrix(), reducedTable(), cancelOutput=TRUE)
-      scatterPlot(simMatrix(), reducedTable())
+      ggplotly(scatterPlot(simMatrix(), reducedTable()))
     })
     
     output$treemapPlot <- renderPlot({
@@ -144,7 +150,7 @@ shinyApp(
     
     output$wordcloudPlot <- renderPlot({
       req(reducedTable(), cancelOutput=TRUE)
-      wordlcoudPlot(reducedTable())
+      wordcloudPlot(reducedTable())
     })
     
     output$reducedTable <- renderDT({
