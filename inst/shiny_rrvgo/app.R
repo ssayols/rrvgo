@@ -2,6 +2,7 @@ library(shiny)
 library(shinydashboard)
 library(DT)
 library(plotly)
+library(magrittr)
 library(heatmaply)
 library(rrvgo)
 
@@ -36,15 +37,30 @@ shinyApp(
       fluidRow(
         column(width=9,
           tabBox(width=NULL,
-            tabPanel("simMatrixPlot", div(style='overflow-x: scroll', plotlyOutput("simMatrixPlot"))),
+            tabPanel("simMatrixPlot",
+              fluidRow(
+                column(width=10, div(style='overflow-x: scroll', plotlyOutput("simMatrixPlot"))),
+                box(width=2, title="Options", status="warning",
+                  checkboxInput("simMatrixDisplayDendro", "draw dendrogram", value=FALSE),
+                  sliderInput("simMatrixFontSize", "font size", ticks=FALSE, min=6, max=12, value=9)
+                )
+              )
+            ),
             tabPanel("scatterPlot"  , div(style='overflow-x: scroll', plotlyOutput("scatterPlot"))),
             tabPanel("treemapPlot"  , div(style='overflow-x: scroll', plotOutput("treemapPlot"))),
-            tabPanel("wordcloudPlot", div(style='overflow-x: scroll', plotOutput("wordcloudPlot")))
+            tabPanel("wordcloudPlot",
+              fluidRow(
+                column(width=10, div(style='overflow-x: scroll', plotOutput("wordcloudPlot"))),
+                box(width=2, title="Options", status="warning",
+                  sliderInput("wordcloudMinFreq", "min frequency", ticks=FALSE, min=1, max=5, value=2)
+                )
+              )
+            )
           ),
           tabBox(width=NULL,
-            tabPanel("reducedTable",
-              div(style='overflow-x: scroll', DTOutput("reducedTable")),
-              downloadLink("downloadReducedTable", "Download reduced table")
+            tabPanel("reducedTerms",
+              div(style='overflow-x: scroll', DTOutput("reducedTerms")),
+              downloadLink("downloadReducedTerms", "Download reduced terms")
             ),
             tabPanel("simMatrix",
               div(style='overflow-x: scroll', DTOutput("simMatrix")),
@@ -73,15 +89,16 @@ shinyApp(
                         choices=c(`Biologiocal Process`="BP",
                                   `Molecular Function`="MF",
                                   `Cellular Compartment`="CC")),
-            selectInput("stringency", label="Stringency", selected="Medium",
-                        choices=c(`Large (allowed similarity=0.9)`="Large",
-                                  `Medium (0.7)`="Medium",
-                                  `Small (0.5)`="Small",
-                                  `Tiny (0.4)`="Tiny")),
+            selectInput("stringency", label="Stringency", selected=0.7,
+                        choices=c(`Large (allowed similarity=0.9)`=0.9,
+                                  `Medium (0.7)`=0.7,
+                                  `Small (0.5)`=0.5,
+                                  `Tiny (0.4)`=0.4)),
             selectInput("method", label="Distance measure", selected="Rel",
                         choices=c("Resnik", "Lin", "Rel", "Jiang", "Wang")),
             a("Click to open a webpage with detailed info about these measures",
-              href="http://bioconductor.org/packages/release/bioc/vignettes/GOSemSim/inst/doc/GOSemSim.htmll#semantic-similarity-measurement-based-on-go")
+              href="https://www.bioconductor.org/packages/release/bioc/vignettes/GOSemSim/inst/doc/GOSemSim.html#semantic-similarity-measurement-based-on-go",
+              target="_blank")
           )
         )
       )
@@ -100,7 +117,7 @@ shinyApp(
     # reactive components -----
     #
     goterms <- reactive({
-      print(input$reduce)
+      input$reduce
       isolate({
         tryCatch({
           read.table(stringsAsFactors=FALSE, strip.white=TRUE, fill=TRUE, text=gsub("[\\t| ]+", "\t", input$goterms))
@@ -109,74 +126,103 @@ shinyApp(
     })
     
     simMatrix <- reactive({
-      #validate(need(!is.null(goterms())))
       req(!is.null(goterms()))
-      tryCatch(calculateSimMatrix(goterms()[, 1], org=input$organism, ont=input$ontology, method=input$method),
-               error=function(e) NULL)
+      withProgress(message="Calculating similarity matrix, this may take a while...", value=0, {
+        tryCatch(calculateSimMatrix(goterms()[, 1], org=input$organism, ont=input$ontology, method=input$method),
+                 error=function(e) NULL)
+      })
     })
 
-    reducedTable <- reactive({
-      #validate(need(!is.null(goterms())))
+    reducedTerms <- reactive({
       req(!is.null(goterms()))
-      scores <- if (ncol(goterms()) >  1)  setNames(goterms()[, 2], goterms()[, 1]) else NULL
-      tryCatch(reduceSimMatrix(simMatrix(), scores=scores, threshold=input$stringency, orgdb=input$organism),
-               error=function(e) NULL)
+      withProgress(message="Reducing GO terms...", value=0, {
+        scores <- if (ncol(goterms()) >  1)  setNames(goterms()[, 2], goterms()[, 1]) else NULL
+        tryCatch(reduceSimMatrix(simMatrix(), scores=scores, threshold=input$stringency, orgdb=input$organism),
+                 error=function(e) NULL)
+      })
     })
       
     observeEvent(input$example, {
       x <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
       x$qvalue <- -log10(x$qvalue)
       x <- paste(apply(x[, c("ID", "qvalue")], 1, paste, collapse="\t"), collapse="\n")
-      updateTextInput(session, "goterms", value=x)
+      updateTextInput  (session, "goterms"   , value=x)
+      updateSelectInput(session, "organism"  , selected="org.Hs.eg.db")
+      updateSelectInput(session, "ontology"  , selected="BP")
+      updateSelectInput(session, "stringency", selected=0.7)
+      updateSelectInput(session, "method"    , selected="Rel")
     })
     
     #
     # UI -----
     #
     output$simMatrixPlot <- renderPlotly({
-      req(simMatrix(), cancelOutput=TRUE)
-      heatmaply::heatmaply(simMatrix(), plot_method="plotly")
+      req(simMatrix(), reducedTerms(), cancelOutput=TRUE)
+      ann <- reducedTerms()$term[match(reducedTerms()$parent, reducedTerms()$go)]
+      ann <- data.frame(ann[match(rownames(simMatrix()), reducedTerms()$go)])
+      colnames(ann) <- ""
+      heatmaply::heatmaply(simMatrix(), row_side_colors=ann, plot_method="plotly",
+                           symm=TRUE, labRow=NULL, key.title="Similarity",
+                           showticklabels=c(FALSE, TRUE),
+                           width=1024, height=1024,
+                           row_side_palette=rrvgo:::gg_color_hue,
+                           show_dendrogram=rep(input$simMatrixDisplayDendro, 2),
+                           fontsize_col=input$simMatrixFontSize) %>%
+        colorbar(xanchor="left", yanchor="bottom", len=.2, tickfont=list(size=input$simMatrixFontSize), which=1) %>%
+        colorbar(xanchor="left", yanchor="bottom", len=.5, tickfont=list(size=input$simMatrixFontSize), which=2)
     })
     
     output$scatterPlot <- renderPlotly({
-      req(simMatrix(), reducedTable(), cancelOutput=TRUE)
-      ggplotly(scatterPlot(simMatrix(), reducedTable()))
+      req(simMatrix(), reducedTerms(), cancelOutput=TRUE)
+      
+      x <- cmdscale(as.matrix(as.dist(1-simMatrix())), eig=TRUE, k=2)
+      df <- cbind(as.data.frame(x$points),
+                  reducedTerms()[match(rownames(x$points), reducedTerms()$go), c("term", "parent", "parentTerm", "size")])
+      
+      ggplotly(
+        scatterPlot(simMatrix(), reducedTerms()) +
+          geom_text(aes(label=parentTerm), data=subset(df, parent == rownames(df)), size=3)
+      )
     })
     
     output$treemapPlot <- renderPlot({
-      req(reducedTable(), cancelOutput=TRUE)
-      treemapPlot(reducedTable())
+      req(reducedTerms(), cancelOutput=TRUE)
+      treemapPlot(reducedTerms(), palette=gg_color_hue(length(unique(reducedTerms()$parent))))
     })
     
     output$wordcloudPlot <- renderPlot({
-      req(reducedTable(), cancelOutput=TRUE)
-      wordcloudPlot(reducedTable())
+      req(reducedTerms(), cancelOutput=TRUE)
+      wordcloudPlot(reducedTerms(), min.freq=input$wordcloudMinFreq)
     })
     
-    output$reducedTable <- renderDT({
-      req(reducedTable(), cancelOutput=TRUE)
-      datatable(reducedTable())
+    output$reducedTerms <- renderDT({
+      req(reducedTerms(), cancelOutput=TRUE)
+      datatable(reducedTerms(), rownames=FALSE, selection="none")
     })
     
     output$simMatrix <- renderDT({
       req(simMatrix(), cancelOutput=TRUE)
-      datatable(simMatrix())
+      datatable(simMatrix(), rownames=FALSE, selection="none")
     })
     
     #
     # Download buttons -----
     #
-    output$downloadReducedTable <- downloadHandler(
-      filename="reducedTable.csv",
+    output$downloadReducedTerms <- downloadHandler(
+      filename="reducedTerms.csv",
       content=function(f) {
-        write.csv(simMatrix(), file=f, row.names=FALSE)
+        if(!is.null(reducedTerms())) {
+          write.csv(reducedTerms(), file=f)
+        }
       }
     )
     
     output$downloadSimMatrix <- downloadHandler(
       filename="similarityMatrix.csv",
       content=function(f) {
-        write.csv(reducedTable(), file=f)
+        if(!is.null(simMatrix())) {
+          write.csv(simMatrix(), file=f, row.names=FALSE)
+        }
       }
     )
     

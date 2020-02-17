@@ -112,7 +112,8 @@ reduceSimMatrix <- function(simMatrix, scores=NULL, threshold=0.7, orgdb) {
              parentSimScore=unlist(Map(1:nrow(simMatrix), clusterRep[cluster], f=function(i, j) simMatrix[i, j])),
              score=scores[match(rownames(simMatrix), names(scores))],
              size=sizes[match(rownames(simMatrix), names(sizes))],
-             term=getGoTerm(rownames(simMatrix)))
+             term=getGoTerm(rownames(simMatrix)),
+             parentTerm=getGoTerm(clusterRep[cluster]))
 }
 
 #' getGoSize

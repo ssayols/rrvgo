@@ -29,13 +29,11 @@ scatterPlot <- function(simMatrix, reducedTerms, size="score", addLabel=TRUE, la
 
   x <- cmdscale(as.matrix(as.dist(1-simMatrix)), eig=TRUE, k=2)
 
-  df <- as.data.frame(x$points)
-  df$term   <- reducedTerms$term[match(rownames(df), reducedTerms$go)]
-  df$parent <- reducedTerms$parent[match(rownames(df), reducedTerms$go)]
-  df$size   <- reducedTerms[match(rownames(df), reducedTerms$go), size]
-
+  df <- cbind(as.data.frame(x$points),
+              reducedTerms[match(rownames(x$points), reducedTerms$go), c("term", "parent", "parentTerm", "size")])
+  
   p <-
-    ggplot2::ggplot(df, ggplot2::aes(x=V1, y=V2, label=term, color=parent)) +
+    ggplot2::ggplot(df, ggplot2::aes(x=V1, y=V2, color=parentTerm)) +
       ggplot2::geom_point(ggplot2::aes(size=size), alpha=.5) +
       ggplot2::scale_color_discrete(guide=FALSE) +
       ggplot2::scale_size_continuous(guide=FALSE, range=c(0, 25)) +
@@ -45,7 +43,9 @@ scatterPlot <- function(simMatrix, reducedTerms, size="score", addLabel=TRUE, la
       ggplot2::theme(axis.text.x=ggplot2::element_blank(), axis.text.y=ggplot2::element_blank())
   
   if(addLabel) {
-    p + ggrepel::geom_label_repel(data=subset(df, parent == rownames(df)), box.padding=grid::unit(1, "lines"), size=labelSize)
+    p + ggrepel::geom_label_repel(aes(label=parentTerm),
+                                  data=subset(df, parent == rownames(df)),
+                                  box.padding=grid::unit(1, "lines"), size=labelSize)
   } else {
     p
   }
@@ -73,9 +73,8 @@ treemapPlot <- function(reducedTerms, size="score", ...) {
          "Consider installing it before using this function.", call.=FALSE)
   }
 
-  reducedTerms$parent <- ifelse(reducedTerms$parent == "", reducedTerms$go, reducedTerms$parent)
-  
-  treemap::treemap(reducedTerms, index=c("parent", "term"), vSize=size, type="index", 
+  treemap::treemap(reducedTerms, index=c("parentTerm", "term"), vSize=size, type="index", title="", 
+                   palette=gg_color_hue(length(unique(reduced_go_analysis$parent))),
                    fontcolor.labels=c("#FFFFFFDD", "#00000080"), bg.labels=0, border.col="#00000080", ...)
 }
 
@@ -90,7 +89,7 @@ treemapPlot <- function(reducedTerms, size="score", ...) {
 #' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 #' scores <- setNames(-log10(go_analysis$qvalue), go_analysis$ID)
 #' reduced_go_analysis <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
-#' wordcloudPlot(reduced_go_analysis, min.freq=2, colors="black")
+#' wordcloudPlot(reduced_go_analysis, min.freq=1, colors="black")
 #' @importFrom tm Corpus TermDocumentMatrix
 #' @importFrom wordcloud wordcloud
 #' @export
@@ -101,7 +100,7 @@ wordcloudPlot <- function(reducedTerms, onlyParents=TRUE, ...) {
   }
     
   if(onlyParents) {
-    x <- tm::Corpus(tm::VectorSource(reducedTerms$term[reducedTerms$parent == ""]))
+    x <- tm::Corpus(tm::VectorSource(reducedTerms$term[reducedTerms$parent == reducedTerms$go]))
   } else {
     x <- tm::Corpus(tm::VectorSource(reducedTerms$term))
   }
@@ -119,7 +118,7 @@ wordcloudPlot <- function(reducedTerms, onlyParents=TRUE, ...) {
 #' @param simMatrix a (square) similarity matrix.
 #' @param reducedTerms a data.frame with the reduced terms from reduceSimMatrix()
 #' @param annotateParent whether to add annotation of the parent
-#' @param annotationLabel display "go" ids or go "term" string
+#' @param annotationLabel display "parent" ids or "parentTerm" string
 #' @param ... other parameters sent to pheatmap::pheatmap()
 #' @details  Matrix with similarity scores between terms is represented as a heatmap.
 #' @examples
@@ -127,10 +126,14 @@ wordcloudPlot <- function(reducedTerms, onlyParents=TRUE, ...) {
 #' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 #' scores <- setNames(-log10(go_analysis$qvalue), go_analysis$ID)
 #' reduced_go_analysis <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
-#' heatmapPlot(simMatrix, reduced_go_analysis, annotateParent=TRUE, annotationLabel="term", fontsize=6)
+#' heatmapPlot(simMatrix, reduced_go_analysis, annotateParent=TRUE, annotationLabel="parentTerm", fontsize=6)
 #' @importFrom pheatmap pheatmap
 #' @export
-heatmapPlot <- function(simMatrix, reducedTerms=NULL, annotateParent=FALSE, annotationLabel="go", ...) {
+heatmapPlot <- function(simMatrix, reducedTerms=NULL, annotateParent=TRUE, annotationLabel="parentTerm", ...) {
+  
+  if(annotateParent && !annotationLabel %in% c("parent", "parentTerm")) {
+    stop("annotationLabel should be one of c('parent', 'parentTerm')")
+  }
   
   if(!all(sapply(c("pheatmap"), requireNamespace, quietly=TRUE))) {
     stop("Package pheatmap and/or its dependencies not available. ",
@@ -142,12 +145,25 @@ heatmapPlot <- function(simMatrix, reducedTerms=NULL, annotateParent=FALSE, anno
   }
   
   if(annotateParent && !is.null(reducedTerms)) {
-    reducedTerms$ann <- reducedTerms[match(reducedTerms$parent, reducedTerms$go), annotationLabel]
-    ann <- data.frame(parent=reducedTerms$ann[match(rownames(simMatrix), reducedTerms$go)],
+    ann <- data.frame(parent=factor(reducedTerms[match(rownames(simMatrix), reducedTerms$go), annotationLabel]),
                       row.names=rownames(simMatrix))
-    pheatmap::pheatmap(simMatrix, annotation_row=ann, ...)
+    annColors <- list(parent=gg_color_hue(length(unique(ann$parent))))
+    names(annColors$parent) <- levels(ann$parent)
+    pheatmap::pheatmap(simMatrix, annotation_row=ann, annotation_colors=annColors, ...)
   } else {
     pheatmap::pheatmap(simMatrix, ...)
   }
   
+}
+
+#' gg_color_hue
+#' Emulate ggplot2 color palette.
+#' 
+#' @param n number of colors
+#' @details  It is just equally spaced hues around the color wheel, starting from 15:
+#' @examples
+#' plot(1:10, pch=16, cex=2, col=gg_color_hue(10))
+gg_color_hue <- function(n) {
+  hues = seq(15, 375, length = n + 1)
+  hcl(h = hues, l = 65, c = 100)[1:n]
 }
