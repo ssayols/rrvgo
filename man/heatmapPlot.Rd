@@ -8,8 +8,8 @@ Plot similarity matrix as a heatmap}
 heatmapPlot(
   simMatrix,
   reducedTerms = NULL,
-  annotateParent = FALSE,
-  annotationLabel = "go",
+  annotateParent = TRUE,
+  annotationLabel = "parentTerm",
   ...
 )
 }
@@ -20,7 +20,7 @@ heatmapPlot(
 
 \item{annotateParent}{whether to add annotation of the parent}
 
-\item{annotationLabel}{display "go" ids or go "term" string}
+\item{annotationLabel}{display "parent" ids or "parentTerm" string}
 
 \item{...}{other parameters sent to pheatmap::pheatmap()}
 }
@@ -35,6 +35,6 @@ Matrix with similarity scores between terms is represented as a heatmap.
 go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 scores <- setNames(-log10(go_analysis$qvalue), go_analysis$ID)
-reduced_go_analysis <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
-heatmapPlot(simMatrix, reduced_go_analysis, annotateParent=TRUE, annotationLabel="term", fontsize=6)
+reducedTerms <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
+heatmapPlot(simMatrix, reducedTerms, annotateParent=TRUE, annotationLabel="parentTerm", fontsize=6)
 }

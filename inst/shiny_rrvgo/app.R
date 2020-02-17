@@ -36,26 +36,11 @@ shinyApp(
     dashboardBody(
       fluidRow(
         column(width=9,
-          tabBox(width=NULL,
-            tabPanel("simMatrixPlot",
-              fluidRow(
-                column(width=10, div(style='overflow-x: scroll', plotlyOutput("simMatrixPlot"))),
-                box(width=2, title="Options", status="warning",
-                  checkboxInput("simMatrixDisplayDendro", "draw dendrogram", value=FALSE),
-                  sliderInput("simMatrixFontSize", "font size", ticks=FALSE, min=6, max=12, value=9)
-                )
-              )
-            ),
+          tabBox(id="plots", width=NULL,
+            tabPanel("simMatrixPlot", div(style='overflow-x: scroll', plotlyOutput("simMatrixPlot"))),
             tabPanel("scatterPlot"  , div(style='overflow-x: scroll', plotlyOutput("scatterPlot"))),
             tabPanel("treemapPlot"  , div(style='overflow-x: scroll', plotOutput("treemapPlot"))),
-            tabPanel("wordcloudPlot",
-              fluidRow(
-                column(width=10, div(style='overflow-x: scroll', plotOutput("wordcloudPlot"))),
-                box(width=2, title="Options", status="warning",
-                  sliderInput("wordcloudMinFreq", "min frequency", ticks=FALSE, min=1, max=5, value=2)
-                )
-              )
-            )
+            tabPanel("wordcloudPlot", div(style='overflow-x: scroll', plotOutput("wordcloudPlot")))
           ),
           tabBox(width=NULL,
             tabPanel("reducedTerms",
@@ -99,6 +84,9 @@ shinyApp(
             a("Click to open a webpage with detailed info about these measures",
               href="https://www.bioconductor.org/packages/release/bioc/vignettes/GOSemSim/inst/doc/GOSemSim.html#semantic-similarity-measurement-based-on-go",
               target="_blank")
+          ),
+          box(width=NULL, title="Plot options", status="warning",
+            uiOutput("plotOptions")
           )
         )
       )
@@ -112,6 +100,7 @@ shinyApp(
     #
     # helpers -----
     #
+    semdata.cache <- list()
 
     #
     # reactive components -----
@@ -128,7 +117,14 @@ shinyApp(
     simMatrix <- reactive({
       req(!is.null(goterms()))
       withProgress(message="Calculating similarity matrix, this may take a while...", value=0, {
-        tryCatch(calculateSimMatrix(goterms()[, 1], org=input$organism, ont=input$ontology, method=input$method),
+        if(is.null(semdata.cache[[input$organism]][[input$ontology]])) {
+          semdata.cache[[input$organism]][[input$ontology]] <<- c(GOSemSim::godata(input$organism, ont=input$ontology)) # ugly trick to get the object assigned...
+        }
+        tryCatch(calculateSimMatrix(goterms()[, 1],
+                                    org=input$organism,
+                                    ont=input$ontology,
+                                    semdata=semdata.cache[[input$organism]][[input$ontology]][[1]], # due to ugly trick, recover from list with [[1]]
+                                    method=input$method),
                  error=function(e) NULL)
       })
     })
@@ -156,6 +152,20 @@ shinyApp(
     #
     # UI -----
     #
+    output$plotOptions <- renderUI({
+      switch(input$plots,
+             simMatrixPlot=
+               tagList(
+                 checkboxInput("simMatrixDisplayDendro", "draw dendrogram", value=FALSE),
+                 sliderInput("simMatrixFontSize", "font size", ticks=FALSE, min=6, max=12, value=9)
+               ),
+             wordcloudPlot=
+               tagList(
+                  sliderInput("wordcloudMinFreq", "min frequency", ticks=FALSE, min=1, max=5, value=2)
+               )
+      ) 
+    })
+    
     output$simMatrixPlot <- renderPlotly({
       req(simMatrix(), reducedTerms(), cancelOutput=TRUE)
       ann <- reducedTerms()$term[match(reducedTerms()$parent, reducedTerms()$go)]
@@ -167,7 +177,7 @@ shinyApp(
                            width=1024, height=1024,
                            row_side_palette=rrvgo:::gg_color_hue,
                            show_dendrogram=rep(input$simMatrixDisplayDendro, 2),
-                           fontsize_col=input$simMatrixFontSize) %>%
+                           fontsize_row=input$simMatrixFontSize) %>%
         colorbar(xanchor="left", yanchor="bottom", len=.2, tickfont=list(size=input$simMatrixFontSize), which=1) %>%
         colorbar(xanchor="left", yanchor="bottom", len=.5, tickfont=list(size=input$simMatrixFontSize), which=2)
     })
@@ -187,7 +197,7 @@ shinyApp(
     
     output$treemapPlot <- renderPlot({
       req(reducedTerms(), cancelOutput=TRUE)
-      treemapPlot(reducedTerms(), palette=gg_color_hue(length(unique(reducedTerms()$parent))))
+      treemapPlot(reducedTerms())
     })
     
     output$wordcloudPlot <- renderPlot({
@@ -202,7 +212,7 @@ shinyApp(
     
     output$simMatrix <- renderDT({
       req(simMatrix(), cancelOutput=TRUE)
-      datatable(simMatrix(), rownames=FALSE, selection="none")
+      datatable(simMatrix(), rownames=TRUE, selection="none")
     })
     
     #
@@ -212,7 +222,7 @@ shinyApp(
       filename="reducedTerms.csv",
       content=function(f) {
         if(!is.null(reducedTerms())) {
-          write.csv(reducedTerms(), file=f)
+          write.csv(reducedTerms(), file=f, row.names=FALSE)
         }
       }
     )
@@ -221,7 +231,7 @@ shinyApp(
       filename="similarityMatrix.csv",
       content=function(f) {
         if(!is.null(simMatrix())) {
-          write.csv(simMatrix(), file=f, row.names=FALSE)
+          write.csv(simMatrix(), file=f)
         }
       }
     )

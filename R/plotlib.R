@@ -14,8 +14,8 @@
 #' go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 #' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 #' scores <- setNames(-log10(go_analysis$qvalue), go_analysis$ID)
-#' reduced_go_analysis <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
-#' scatterPlot(simMatrix, reduced_go_analysis)
+#' reducedTerms <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
+#' scatterPlot(simMatrix, reducedTerms)
 #' @import ggplot2
 #' @import ggrepel
 #' @importFrom grid unit
@@ -63,8 +63,8 @@ scatterPlot <- function(simMatrix, reducedTerms, size="score", addLabel=TRUE, la
 #' go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 #' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 #' scores <- setNames(-log10(go_analysis$qvalue), go_analysis$ID)
-#' reduced_go_analysis <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
-#' treemapPlot(reduced_go_analysis)
+#' reducedTerms <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
+#' treemapPlot(reducedTerms)
 #' @importFrom treemap treemap
 #' @export
 treemapPlot <- function(reducedTerms, size="score", ...) {
@@ -74,7 +74,7 @@ treemapPlot <- function(reducedTerms, size="score", ...) {
   }
 
   treemap::treemap(reducedTerms, index=c("parentTerm", "term"), vSize=size, type="index", title="", 
-                   palette=gg_color_hue(length(unique(reduced_go_analysis$parent))),
+                   palette=gg_color_hue(length(unique(reducedTerms$parent))),
                    fontcolor.labels=c("#FFFFFFDD", "#00000080"), bg.labels=0, border.col="#00000080", ...)
 }
 
@@ -88,8 +88,8 @@ treemapPlot <- function(reducedTerms, size="score", ...) {
 #' go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 #' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 #' scores <- setNames(-log10(go_analysis$qvalue), go_analysis$ID)
-#' reduced_go_analysis <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
-#' wordcloudPlot(reduced_go_analysis, min.freq=1, colors="black")
+#' reducedTerms <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
+#' wordcloudPlot(reducedTerms, min.freq=1, colors="black")
 #' @importFrom tm Corpus TermDocumentMatrix
 #' @importFrom wordcloud wordcloud
 #' @export
@@ -125,8 +125,8 @@ wordcloudPlot <- function(reducedTerms, onlyParents=TRUE, ...) {
 #' go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 #' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 #' scores <- setNames(-log10(go_analysis$qvalue), go_analysis$ID)
-#' reduced_go_analysis <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
-#' heatmapPlot(simMatrix, reduced_go_analysis, annotateParent=TRUE, annotationLabel="parentTerm", fontsize=6)
+#' reducedTerms <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
+#' heatmapPlot(simMatrix, reducedTerms, annotateParent=TRUE, annotationLabel="parentTerm", fontsize=6)
 #' @importFrom pheatmap pheatmap
 #' @export
 heatmapPlot <- function(simMatrix, reducedTerms=NULL, annotateParent=TRUE, annotationLabel="parentTerm", ...) {

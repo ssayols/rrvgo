@@ -38,5 +38,5 @@ broader or the narrower one (`untie` parm).
 go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 scores <- setNames(-log10(go_analysis$qvalue), go_analysis$ID)
-reduced_go_analysis <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
+reducedTerms <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
 }

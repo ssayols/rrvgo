@@ -75,7 +75,7 @@ calculateSimMatrix <- function(x,
 #' go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 #' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 #' scores <- setNames(-log10(go_analysis$qvalue), go_analysis$ID)
-#' reduced_go_analysis <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
+#' reducedTerms <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
 #' @export
 reduceSimMatrix <- function(simMatrix, scores=NULL, threshold=0.7, orgdb) {
  
@@ -140,8 +140,9 @@ getGoSize <- function(terms, orgdb) {
   
   # count
   counts   <- table(go$GO)
-  empty    <- terms[!terms %in% names(counts)]
-  nocounts <- setNames(rep(NA, length(empty)), empty)
+  go <- go[go$GO %in% terms, ]
+  empty    <- terms[!(terms %in% names(counts))]
+  nocounts <- setNames(rep(0, length(empty)), empty)
   
   c(counts, nocounts)
 }
@@ -163,7 +164,7 @@ getGoTerm <- function(x) {
 #' @return the loaded orgdb
 loadOrgdb <- function(orgdb) {
   if(!requireNamespace(orgdb, quietly = TRUE)) {
-    stop("Bioconductor orgdb for", org, "not found. Consider installing it.",
+    stop("Bioconductor orgdb for ", orgdb, " not found. Consider installing it.",
          call. = FALSE)
   }
   eval(parse(text=paste0(orgdb, "::", orgdb)))

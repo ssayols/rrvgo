@@ -22,6 +22,6 @@ Plot GO reduced terms as a wordcloud.
 go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 scores <- setNames(-log10(go_analysis$qvalue), go_analysis$ID)
-reduced_go_analysis <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
-wordcloudPlot(reduced_go_analysis, min.freq=2, colors="black")
+reducedTerms <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
+wordcloudPlot(reducedTerms, min.freq=1, colors="black")
 }
