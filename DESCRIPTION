@@ -1,13 +1,14 @@
 Package: rrvgo
 Type: Package
-Title: Reduce + Visualize GO (a la REVIGO)
+Title: Reduce + Visualize GO
 Version: 1.0
 Date: 2018-09-14
 Author: Sergi Sayols
 Maintainer: Sergi Sayols <sergisayolspuig@gmail.com>
-Description: Mimic what REVIGO does, but making use of what Bioconductor provides
+Description: Reduce and visualize lists of Gene Ontology terms by identifying redudance based on semantic similarity
 License: GPL3
 LazyData: TRUE
+Encoding: UTF-8
 Imports: GOSemSim,
          AnnotationDbi,
          GO.db
@@ -46,3 +47,5 @@ Suggests: knitr,
           org.Xl.eg.db
 VignetteBuilder: knitr
 RoxygenNote: 7.0.2
+biocViews: Annotation, Clustering, GO, Network, Pathways, Software
+NeedsCompilation: no
