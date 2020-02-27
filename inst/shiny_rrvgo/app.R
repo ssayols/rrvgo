@@ -1,6 +1,7 @@
 library(shiny)
 library(shinydashboard)
 library(DT)
+library(ggplot2)
 library(plotly)
 library(magrittr)
 library(heatmaply)
@@ -159,6 +160,11 @@ shinyApp(
                  checkboxInput("simMatrixDisplayDendro", "draw dendrogram", value=FALSE),
                  sliderInput("simMatrixFontSize", "font size", ticks=FALSE, min=6, max=12, value=9)
                ),
+             scatterPlot=
+               tagList(
+                 checkboxInput("scatterLabels", "labels", value=TRUE),
+                 checkboxInput("scatterLegend", "legend", value=TRUE)
+               ),
              wordcloudPlot=
                tagList(
                   sliderInput("wordcloudMinFreq", "min frequency", ticks=FALSE, min=1, max=5, value=2)
@@ -167,7 +173,8 @@ shinyApp(
     })
     
     output$simMatrixPlot <- renderPlotly({
-      req(simMatrix(), reducedTerms(), cancelOutput=TRUE)
+      req(simMatrix(), reducedTerms(), !is.null(input$simMatrixDisplayDendro), !is.null(input$simMatrixFontSize), cancelOutput=TRUE)
+      
       ann <- reducedTerms()$term[match(reducedTerms()$parent, reducedTerms()$go)]
       ann <- data.frame(ann[match(rownames(simMatrix()), reducedTerms()$go)])
       colnames(ann) <- ""
@@ -183,16 +190,20 @@ shinyApp(
     })
     
     output$scatterPlot <- renderPlotly({
-      req(simMatrix(), reducedTerms(), cancelOutput=TRUE)
+      req(simMatrix(), reducedTerms(), !is.null(input$scatterLabels), !is.null(input$scatterLegend), cancelOutput=TRUE)
       
       x <- cmdscale(as.matrix(as.dist(1-simMatrix())), eig=TRUE, k=2)
       df <- cbind(as.data.frame(x$points),
                   reducedTerms()[match(rownames(x$points), reducedTerms()$go), c("term", "parent", "parentTerm", "size")])
       
-      ggplotly(
-        scatterPlot(simMatrix(), reducedTerms()) +
-          geom_text(aes(label=parentTerm), data=subset(df, parent == rownames(df)), size=3)
-      )
+      p <-  scatterPlot(simMatrix(), reducedTerms(), addLabel=FALSE)
+      if(input$scatterLabels) {
+        p <- p + geom_text(aes(label=parentTerm), data=subset(df, parent == rownames(df)), size=3)
+      }
+      if(!input$scatterLegend) {
+        p <- p + theme(legend.position='none')
+      }
+      ggplotly(p)
     })
     
     output$treemapPlot <- renderPlot({
@@ -201,7 +212,7 @@ shinyApp(
     })
     
     output$wordcloudPlot <- renderPlot({
-      req(reducedTerms(), cancelOutput=TRUE)
+      req(reducedTerms(), !is.null(input$wordcloudMinFreq), cancelOutput=TRUE)
       wordcloudPlot(reducedTerms(), min.freq=input$wordcloudMinFreq)
     })
     
