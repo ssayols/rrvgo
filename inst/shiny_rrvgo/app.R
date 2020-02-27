@@ -218,7 +218,7 @@ shinyApp(
     
     output$reducedTerms <- renderDT({
       req(reducedTerms(), cancelOutput=TRUE)
-      datatable(reducedTerms(), rownames=FALSE, selection="none")
+      datatable(reducedTerms(), rownames=FALSE, selection="none", options=list(pageLength=5))
     })
     
     output$simMatrix <- renderDT({

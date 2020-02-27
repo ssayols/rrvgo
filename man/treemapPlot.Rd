@@ -18,10 +18,6 @@ treemapPlot(reducedTerms, size = "score", ...)
 treemapPlot
 Plot GO terms as a treemap.
 }
-\details{
-Distances between points represent the similarity between terms.
-Axes are the first 2 components of applying a PCA to the similarity matrix.
-}
 \examples{
 go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
