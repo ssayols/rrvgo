@@ -10,6 +10,9 @@ gg_color_hue(n)
 \arguments{
 \item{n}{number of colors}
 }
+\value{
+a vector with colors (alphanumeric)
+}
 \description{
 gg_color_hue
 Emulate ggplot2 color palette.

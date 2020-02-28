@@ -2,6 +2,7 @@
 #' 
 #' Prepare demo data included in the package.
 #' 
+#' @return Whatever the call to write.table() would return
 #' @details Taken asis from https://yulab-smu.github.io/clusterProfiler-book/chapter3.html#input-data,
 #' which at the same time it is taken from the R package breastCancerMAINZ. It
 #' contains 200 samples with breast cancer at different grades (I, II and III).

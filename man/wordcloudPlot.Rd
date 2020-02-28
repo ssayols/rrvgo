@@ -14,6 +14,9 @@ wordcloudPlot(reducedTerms, onlyParents = TRUE, ...)
 
 \item{...}{other parameters sent to wordcloud::wordcloud()}
 }
+\value{
+Nothing
+}
 \description{
 wordlcoudPlot
 Plot GO reduced terms as a wordcloud.

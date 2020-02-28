@@ -24,6 +24,9 @@ scatterPlot(
 
 \item{labelSize}{text size in the label.}
 }
+\value{
+ggplot2 object raedy to be printed (or manipulated)
+}
 \description{
 scatterPlot
 Plot GO terms as scattered points.

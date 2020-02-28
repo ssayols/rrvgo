@@ -2,6 +2,7 @@
 #' Launch an interactive web interface.
 #'
 #' @param ... other params sent to shiny::runApp().
+#' @return Nothing
 #' @importFrom shiny runApp
 #' @export
 shiny_rrvgo <- function(...) {

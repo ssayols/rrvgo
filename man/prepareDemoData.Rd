@@ -6,6 +6,9 @@
 \usage{
 prepareDemoData()
 }
+\value{
+Whatever the call to write.table() would return
+}
 \description{
 Prepare demo data included in the package.
 }

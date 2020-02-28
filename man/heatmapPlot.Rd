@@ -24,6 +24,9 @@ heatmapPlot(
 
 \item{...}{other parameters sent to pheatmap::pheatmap()}
 }
+\value{
+Invisibly a pheatmap object that is a list with components
+}
 \description{
 heatmapPlot
 Plot similarity matrix as a heatmap

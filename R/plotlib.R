@@ -6,6 +6,7 @@
 #' @param size what to use as point size. Can be either GO term's "size" or "score"
 #' @param addLabel add labels with the most representative term of the group.
 #' @param labelSize text size in the label.
+#' @return  ggplot2 object raedy to be printed (or manipulated)
 #' @details  Distances between points represent the similarity between terms.
 #' Axes are the first 2 components of applying a PCoA to the (di)similarity matrix.
 #' Size of the point represents the provided scores or, in its absence, the number
@@ -58,6 +59,7 @@ scatterPlot <- function(simMatrix, reducedTerms, size="score", addLabel=TRUE, la
 #' @param reducedTerms a data.frame with the reduced terms from reduceSimMatrix()
 #' @param size what to use as point size. Can be either GO term's "size" or "score"
 #' @param ... other parameters sent to treemap::treemap()
+#' @return A list from the call to the `treemap()` function is silently returned
 #' @examples
 #' go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 #' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
@@ -83,6 +85,7 @@ treemapPlot <- function(reducedTerms, size="score", ...) {
 #' @param reducedTerms a data.frame with the reduced terms from reduceSimMatrix().
 #' @param onlyParents use only parent terms to calculate frequencies.
 #' @param ... other parameters sent to wordcloud::wordcloud()
+#' @return Nothing
 #' @examples
 #' go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 #' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
@@ -119,6 +122,7 @@ wordcloudPlot <- function(reducedTerms, onlyParents=TRUE, ...) {
 #' @param annotateParent whether to add annotation of the parent
 #' @param annotationLabel display "parent" ids or "parentTerm" string
 #' @param ... other parameters sent to pheatmap::pheatmap()
+#' @return Invisibly a pheatmap object that is a list with components
 #' @details  Matrix with similarity scores between terms is represented as a heatmap.
 #' @examples
 #' go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
@@ -159,6 +163,7 @@ heatmapPlot <- function(simMatrix, reducedTerms=NULL, annotateParent=TRUE, annot
 #' Emulate ggplot2 color palette.
 #' 
 #' @param n number of colors
+#' @return a vector with colors (alphanumeric)
 #' @details  It is just equally spaced hues around the color wheel, starting from 15:
 #' @importFrom grDevices hcl
 #' @examples

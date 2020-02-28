@@ -10,6 +10,9 @@ shiny_rrvgo(...)
 \arguments{
 \item{...}{other params sent to shiny::runApp().}
 }
+\value{
+Nothing
+}
 \description{
 shiny_rrvgo
 Launch an interactive web interface.

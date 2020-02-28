@@ -14,6 +14,9 @@ treemapPlot(reducedTerms, size = "score", ...)
 
 \item{...}{other parameters sent to treemap::treemap()}
 }
+\value{
+A list from the call to the `treemap()` function is silently returned
+}
 \description{
 treemapPlot
 Plot GO terms as a treemap.

@@ -3,14 +3,12 @@ title: "Using the rrvgo package"
 author: "Sergi Sayols"
 date: "`r Sys.Date()`"
 output:
-    BiocStyle::html_document:
-    toc: true
+  BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{ing rrvgo
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}  
 ---
-<!--
-  % \VignetteIndexEntry{Using rrvgo}
-  % \VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
--->
 
 ```{r pre, echo=FALSE, results='hide'}
 library(rrvgo)
