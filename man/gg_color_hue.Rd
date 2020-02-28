@@ -18,5 +18,7 @@ Emulate ggplot2 color palette.
 It is just equally spaced hues around the color wheel, starting from 15:
 }
 \examples{
+\dontrun{
 plot(1:10, pch=16, cex=2, col=gg_color_hue(10))
+}
 }

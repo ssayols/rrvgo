@@ -7,6 +7,7 @@
 #' contains 200 samples with breast cancer at different grades (I, II and III).
 #' The dataset basically contains log2 ratios of the geometric means of
 #' grade III vs. grade I samples.
+#' @importFrom utils data write.table
 prepareDemoData <- function() {
   data(geneList, package="DOSE")
   gene <- names(geneList)[abs(geneList) > 2]

@@ -14,6 +14,8 @@ calculateSimMatrix(
 )
 }
 \arguments{
+\item{x}{vector of GO terms}
+
 \item{orgdb}{one of org.* Bioconductor packages (the package name, or the
 package itself)}
 
@@ -23,8 +25,6 @@ package itself)}
 
 \item{method}{distance method. One of the supported methods by GOSemSim:
 c("Resnik", "Lin", "Rel", "Jiang", "Wang")}
-
-\item{goterms}{vector of GO terms}
 }
 \value{
 a square matrix with similarity scores between terms

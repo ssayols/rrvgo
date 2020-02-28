@@ -1,14 +1,19 @@
 ---
 title: "Using the rrvgo package"
 author: "Sergi Sayols"
-date: "January 27, 2020"
+date: "`r Sys.Date()`"
 output:
     BiocStyle::html_document:
     toc: true
+vignette: >
+  %\VignetteIndexEntry{Using rrvgo}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 ---
 <!--
-% \VignetteEngine{knitr::rmarkdown}
-% \VignetteIndexEntry{Using rrvgo}
+  % \VignetteIndexEntry{Using rrvgo}
+  % \VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
 -->
 
 ```{r pre, echo=FALSE, results='hide'}
@@ -16,6 +21,7 @@ library(rrvgo)
 library(knitr)
 opts_chunk$set(warning=FALSE, message=FALSE, cache=TRUE)
 ```
+
 ```{r style, echo=FALSE, results='asis'}
 BiocStyle::markdown()
 ```
@@ -44,8 +50,8 @@ Bioconductor project.
 
 Starting with a list of genes of interest (eg. coming from a differential expression
 analysis), apply any method for the identification of eneriched GO terms (see 
-(GOStats)[https://www.bioconductor.org/packages/release/bioc/html/GOstats.html] or
-(GSEA)[https://www.gsea-msigdb.org/gsea/index.jsp]).
+[GOStats](https://www.bioconductor.org/packages/release/bioc/html/GOstats.html) or
+[GSEA](https://www.gsea-msigdb.org/gsea/index.jsp]).
 
 `rrvgo` does not care about genes, but GO terms. The input is a vector enriched
 GO terms, along with (recommended, but not mandatory) a vector of scores. If scores
@@ -170,7 +176,7 @@ The app offers *interactive* access to the plots and tables calculated by `rrvgo
 
 All similarity measures available are those implemented in the
 [GOSemSim package](https://www.bioconductor.org/packages/release/bioc/html/GOSemSim.html),
-namely the Resnik, LIn, Relevance, Jiang and Wang methods. See the
+namely the Resnik, Lin, Relevance, Jiang and Wang methods. See the
 [Semantic Similarity Measurement Based on GO](https://www.bioconductor.org/packages/release/bioc/vignettes/GOSemSim/inst/doc/GOSemSim.html#semantic-similarity-measurement-based-on-go)
 section from the GOSeSim documentation for more details.
 
@@ -179,7 +185,7 @@ section from the GOSeSim documentation for more details.
 Bioconductor current provides `OrgDb` objects for [20 species](https://www.bioconductor.org/packages/release/BiocViews.html#___OrgDb)
 provided by the following packages:
 
-| Package	          | Organism                   |
+| Package           | Organism                   |
 |-------------------|----------------------------|
 | org.Ag.eg.db      | Anopheles                  |
 | org.At.tair.db    | Arabidopsis                |
@@ -189,7 +195,7 @@ provided by the following packages:
 | org.Dm.eg.db      | Fly                        |
 | org.Dr.eg.db      | Zebrafish                  |
 | org.EcK12.eg.db   | E coli strain K12          |
-| org.EcSakai.eg.db	| E coli strain Sakai        |
+| org.EcSakai.eg.db | E coli strain Sakai        |
 | org.Gg.eg.db      | Chicken                    |
 | org.Hs.eg.db      | Human                      |
 | org.Mm.eg.db      | Mouse                      |

@@ -19,6 +19,7 @@
 #' @import ggplot2
 #' @import ggrepel
 #' @importFrom grid unit
+#' @importFrom stats as.dist cmdscale
 #' @export
 scatterPlot <- function(simMatrix, reducedTerms, size="score", addLabel=TRUE, labelSize=3) {
 
@@ -159,9 +160,12 @@ heatmapPlot <- function(simMatrix, reducedTerms=NULL, annotateParent=TRUE, annot
 #' 
 #' @param n number of colors
 #' @details  It is just equally spaced hues around the color wheel, starting from 15:
+#' @importFrom grDevices hcl
 #' @examples
+#' \dontrun{
 #' plot(1:10, pch=16, cex=2, col=gg_color_hue(10))
+#' }
 gg_color_hue <- function(n) {
   hues = seq(15, 375, length = n + 1)
-  hcl(h = hues, l = 65, c = 100)[1:n]
+  hcl(h = hues, l = 65, c = 100)[seq_len(n)]
 }

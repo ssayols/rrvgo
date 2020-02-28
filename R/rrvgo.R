@@ -1,7 +1,7 @@
 #' calculateSimMatrix
 #' Calculate the score similarity matrix between terms
 #' 
-#' @param goterms vector of GO terms
+#' @param x vector of GO terms
 #' @param orgdb one of org.* Bioconductor packages (the package name, or the
 #'   package itself)
 #' @param semdata object with prepared GO DATA for measuring semantic similarity
@@ -12,7 +12,8 @@
 #' @examples
 #' go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 #' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
-#' @importFrom GOSemSim godata goSim
+#' @import GOSemSim
+#' @importFrom methods is
 #' @export
 calculateSimMatrix <- function(x,
                                orgdb,
@@ -25,7 +26,7 @@ calculateSimMatrix <- function(x,
   method <- match.arg(method) 
   
   # load orgdb object
-  if(class(orgdb) != "OrgDb") {
+  if(all(is(orgdb) != "OrgDb")) {
     orgdb <- loadOrgdb(orgdb)
   }
  
@@ -76,6 +77,7 @@ calculateSimMatrix <- function(x,
 #' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 #' scores <- setNames(-log10(go_analysis$qvalue), go_analysis$ID)
 #' reducedTerms <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
+#' @importFrom stats cutree hclust
 #' @export
 reduceSimMatrix <- function(simMatrix, scores=NULL, threshold=0.7, orgdb) {
  
@@ -109,7 +111,7 @@ reduceSimMatrix <- function(simMatrix, scores=NULL, threshold=0.7, orgdb) {
   data.frame(go=rownames(simMatrix),
              cluster=cluster,
              parent=clusterRep[cluster],
-             parentSimScore=unlist(Map(1:nrow(simMatrix), clusterRep[cluster], f=function(i, j) simMatrix[i, j])),
+             parentSimScore=unlist(Map(seq_len(nrow(simMatrix)), clusterRep[cluster], f=function(i, j) simMatrix[i, j])),
              score=scores[match(rownames(simMatrix), names(scores))],
              size=sizes[match(rownames(simMatrix), names(sizes))],
              term=getGoTerm(rownames(simMatrix)),
@@ -123,9 +125,11 @@ reduceSimMatrix <- function(simMatrix, scores=NULL, threshold=0.7, orgdb) {
 #' @param orgdb one of org.* Bioconductor packages (the package name, or the
 #'   package itself)
 #' @importFrom AnnotationDbi select keys
+#' @importFrom stats setNames
+#' @importFrom methods is
 #' @return number of genes associated with each term
 getGoSize <- function(terms, orgdb) {
-  if(class(orgdb) != "OrgDb") {
+  if(all(is(orgdb) != "OrgDb")) {
     orgdb <- loadOrgdb(orgdb)
   }
   
