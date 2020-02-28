@@ -5,10 +5,6 @@ date: "`r Sys.Date()`"
 output:
     BiocStyle::html_document:
     toc: true
-vignette: >
-  %\VignetteIndexEntry{Using rrvgo}
-  %\VignetteEngine{knitr::rmarkdown}
-  \usepackage[utf8]{inputenc}
 ---
 <!--
   % \VignetteIndexEntry{Using rrvgo}
