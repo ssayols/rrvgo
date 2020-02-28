@@ -7,7 +7,6 @@ Author: Sergi Sayols
 Maintainer: Sergi Sayols <sergisayolspuig@gmail.com>
 Description: Reduce and visualize lists of Gene Ontology terms by identifying redudance based on semantic similarity.
 License: GPL-3
-LazyData: TRUE
 Encoding: UTF-8
 Imports: GOSemSim,
          AnnotationDbi,
