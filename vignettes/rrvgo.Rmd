@@ -5,13 +5,12 @@ date: "`r Sys.Date()`"
 output:
   BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{ing rrvgo
+  %\VignetteIndexEntry{Using rrvgo}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}  
 ---
 
 ```{r pre, echo=FALSE, results='hide'}
-library(rrvgo)
 library(knitr)
 opts_chunk$set(warning=FALSE, message=FALSE, cache=TRUE)
 ```
@@ -60,6 +59,7 @@ an `OrgDb` object for an organism, the ontology of interest and the method to
 calculate the similarity scores.
 
 ```{r}
+library(rrvgo)
 go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 simMatrix <- calculateSimMatrix(go_analysis$ID,
                                 orgdb="org.Hs.eg.db",

@@ -1,7 +1,7 @@
 Package: rrvgo
 Type: Package
 Title: Reduce + Visualize GO
-Version: 0.99.1
+Version: 0.99.2
 Date: 2020-02-27
 Author: Sergi Sayols
 Maintainer: Sergi Sayols <sergisayolspuig@gmail.com>
