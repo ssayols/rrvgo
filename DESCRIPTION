@@ -1,7 +1,7 @@
 Package: rrvgo
 Type: Package
 Title: Reduce + Visualize GO
-Version: 0.99.2
+Version: 0.99.3
 Author: Sergi Sayols
 Maintainer: Sergi Sayols <sergisayolspuig@gmail.com>
 Description: Reduce and visualize lists of Gene Ontology terms by identifying redudance based on semantic similarity.
@@ -22,35 +22,36 @@ Imports: GOSemSim,
          stats,
          methods,
          utils
-Suggests: knitr,
-          rmarkdown,
-          BiocStyle,
-          testthat,
-          clusterProfiler,
-          DOSE,
-          slam,
-          plotly,
-          heatmaply,
-          magrittr,
-          org.Ag.eg.db,
-          org.At.tair.db,
-          org.Bt.eg.db,
-          org.Ce.eg.db,
-          org.Cf.eg.db,
-          org.Dm.eg.db,
-          org.Dr.eg.db,
-          org.EcK12.eg.db,
-          org.EcSakai.eg.db,
-          org.Gg.eg.db,
-          org.Hs.eg.db,
-          org.Mm.eg.db,
-          org.Mmu.eg.db,
-          org.Pf.plasmo.db,
-          org.Pt.eg.db,
-          org.Rn.eg.db,
-          org.Sc.sgd.db,
-          org.Ss.eg.db,
-          org.Xl.eg.db
+Suggests: 
+    knitr,
+    rmarkdown,
+    BiocStyle,
+    testthat (>= 2.1.0),
+    clusterProfiler,
+    DOSE,
+    slam,
+    plotly,
+    heatmaply,
+    magrittr,
+    org.Ag.eg.db,
+    org.At.tair.db,
+    org.Bt.eg.db,
+    org.Ce.eg.db,
+    org.Cf.eg.db,
+    org.Dm.eg.db,
+    org.Dr.eg.db,
+    org.EcK12.eg.db,
+    org.EcSakai.eg.db,
+    org.Gg.eg.db,
+    org.Hs.eg.db,
+    org.Mm.eg.db,
+    org.Mmu.eg.db,
+    org.Pf.plasmo.db,
+    org.Pt.eg.db,
+    org.Rn.eg.db,
+    org.Sc.sgd.db,
+    org.Ss.eg.db,
+    org.Xl.eg.db
 VignetteBuilder: knitr
 RoxygenNote: 7.0.2
 biocViews: Annotation, Clustering, GO, Network, Pathways, Software
