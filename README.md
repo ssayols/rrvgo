@@ -1,12 +1,43 @@
 # RVGO
 
-Reduce + Visualize Gene Ontology (ala [REViGO](http://revigo.irb.hr/))
+Reduce and visualize lists of Gene Ontology terms by identifying redudance based on semantic similarity.
 
-## Aim
+## Introduction to rrvgo
 
-Using all resources available in Bioconductor, provide something with the 
-fantastic functionality of [REViGO](http://revigo.irb.hr/), but offering a
-programmatic interface.
+Gene Ontologies (GO) are often used to guide the interpretation of high-throughput
+omics experiments, with lists of differentially regulated genes being summarized
+into sets of genes with a common functional representation. Due to the hierachical
+nature of Gene Ontologies, the resulting lists of enriched sets are usually
+redundant and difficult to interpret.
+
+`rrvgo` aims at simplifying the redundance of GO sets by grouping similar terms
+in terms of semantic similarity. It also provides some plots to help with
+interpreting the summarized terms.
+
+This software is heavily influenced by [REVIGO](http://revigo.irb.hr/). It mimics
+a good part of its core functionality, and even some of the outputs are similar.
+Without aims to compete, `rrvgo` tries to offer a programatic interface using
+available annotation databases and semantic similarity methods implemented in the
+Bioconductor project.
+
+## Installation
+
+To install this package, start R and enter:
+
+```r
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("rrvgo")
+```
+
+## Documentation
+
+To view documentation for the version of this package installed in your system, start R and enter:
+
+```r
+browseVignettes("rrvgo")
+```
 
 ## Dependencies
 
@@ -19,9 +50,12 @@ programmatic interface.
 ### Suggests
 
 * pheatmap
-* wordcloud2
+* wordcloud
 * treemap
 * ggplot2
+* shiny
+* heatmaply
+* plotly
 * [org.Ag.eg.db](http://bioconductor.org/packages/org.Ag.eg.db/): Genome wide annotation for Anopheles.
 * [org.At.tair.db](http://bioconductor.org/packages/org.At.tair.db/): Genome wide annotation for Arabidopsis.
 * [org.Bt.eg.db](http://bioconductor.org/packages/org.Bt.eg.db/): Genome wide annotation for Bovine.
