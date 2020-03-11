@@ -44,7 +44,7 @@ Bioconductor project.
 Starting with a list of genes of interest (eg. coming from a differential expression
 analysis), apply any method for the identification of eneriched GO terms (see 
 [GOStats](https://www.bioconductor.org/packages/release/bioc/html/GOstats.html) or
-[GSEA](https://www.gsea-msigdb.org/gsea/index.jsp]).
+[GSEA](https://www.gsea-msigdb.org/gsea/index.jsp])).
 
 `rrvgo` does not care about genes, but GO terms. The input is a vector enriched
 GO terms, along with (recommended, but not mandatory) a vector of scores. If scores
