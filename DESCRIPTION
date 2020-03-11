@@ -1,7 +1,7 @@
 Package: rrvgo
 Type: Package
 Title: Reduce + Visualize GO
-Version: 0.99.3
+Version: 0.99.5
 Author: Sergi Sayols
 Maintainer: Sergi Sayols <sergisayolspuig@gmail.com>
 Description: Reduce and visualize lists of Gene Ontology terms by identifying redudance based on semantic similarity.
@@ -17,6 +17,10 @@ Imports: GOSemSim,
          tm,
          wordcloud,
          shiny,
+         shinydashboard,
+         plotly,
+         heatmaply,
+         magrittr,
          grDevices,
          grid,
          stats,
@@ -30,9 +34,6 @@ Suggests:
     clusterProfiler,
     DOSE,
     slam,
-    plotly,
-    heatmaply,
-    magrittr,
     org.Ag.eg.db,
     org.At.tair.db,
     org.Bt.eg.db,

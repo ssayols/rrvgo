@@ -33,6 +33,13 @@ a square matrix with similarity scores between terms
 calculateSimMatrix
 Calculate the score similarity matrix between terms
 }
+\details{
+All similarity measures available are those implemented in the
+[GOSemSim package](https://www.bioconductor.org/packages/release/bioc/html/GOSemSim.html),
+namely the Resnik, Lin, Relevance, Jiang and Wang methods. See the
+[Semantic Similarity Measurement Based on GO](https://www.bioconductor.org/packages/release/bioc/vignettes/GOSemSim/inst/doc/GOSemSim.html#semantic-similarity-measurement-based-on-go)
+section from the GOSeSim documentation for more details.
+}
 \examples{
 go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
