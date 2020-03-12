@@ -36,24 +36,6 @@ shinyApp(
     dashboardSidebar(disable=TRUE),
     dashboardBody(
       fluidRow(
-        column(width=9,
-          tabBox(id="plots", width=NULL,
-            tabPanel("simMatrixPlot", div(style='overflow-x: scroll', plotlyOutput("simMatrixPlot"))),
-            tabPanel("scatterPlot"  , div(style='overflow-x: scroll', plotlyOutput("scatterPlot"))),
-            tabPanel("treemapPlot"  , div(style='overflow-x: scroll', plotOutput("treemapPlot"))),
-            tabPanel("wordcloudPlot", div(style='overflow-x: scroll', plotOutput("wordcloudPlot")))
-          ),
-          tabBox(width=NULL,
-            tabPanel("reducedTerms",
-              div(style='overflow-x: scroll', DTOutput("reducedTerms")),
-              downloadLink("downloadReducedTerms", "Download reduced terms")
-            ),
-            tabPanel("simMatrix",
-              div(style='overflow-x: scroll', DTOutput("simMatrix")),
-              downloadLink("downloadSimMatrix", "Download similarity matrix")
-            )
-          )
-        ),
         column(width=3,
           box(width=NULL, title="GO terms", status="warning",
             textAreaInput("goterms", label="Paste here the GO terms", height="200px",
@@ -88,6 +70,24 @@ shinyApp(
           ),
           box(width=NULL, title="Plot options", status="warning",
             uiOutput("plotOptions")
+          )
+        ),
+        column(width=9,
+          tabBox(id="plots", width=NULL,
+            tabPanel("simMatrixPlot", div(style='overflow-x: scroll', plotlyOutput("simMatrixPlot"))),
+            tabPanel("scatterPlot"  , div(style='overflow-x: scroll', plotlyOutput("scatterPlot"))),
+            tabPanel("treemapPlot"  , div(style='overflow-x: scroll', plotOutput("treemapPlot"))),
+            tabPanel("wordcloudPlot", div(style='overflow-x: scroll', plotOutput("wordcloudPlot")))
+          ),
+          tabBox(width=NULL,
+            tabPanel("reducedTerms",
+              div(style='overflow-x: scroll', DTOutput("reducedTerms")),
+              downloadLink("downloadReducedTerms", "Download reduced terms")
+            ),
+            tabPanel("simMatrix",
+              div(style='overflow-x: scroll', DTOutput("simMatrix")),
+              downloadLink("downloadSimMatrix", "Download similarity matrix")
+            )
           )
         )
       )
