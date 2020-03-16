@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/ssayols/rrvgo.svg?branch=master)](https://travis-ci.com/ssayols/rrvgo)
+
 # RVGO
 
 Reduce and visualize lists of Gene Ontology terms by identifying redudance based on semantic similarity.
