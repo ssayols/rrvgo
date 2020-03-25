@@ -28,7 +28,7 @@ nature of Gene Ontologies, the resulting lists of enriched sets are usually
 redundant and difficult to interpret.
 
 `rrvgo` aims at simplifying the redundance of GO sets by grouping similar terms
-in terms of semantic similarity. It also provides some plots to help with
+based on their semantic similarity. It also provides some plots to help with
 interpreting the summarized terms.
 
 This software is heavily influenced by [REVIGO](http://revigo.irb.hr/). It mimics
@@ -46,7 +46,7 @@ analysis), apply any method for the identification of eneriched GO terms (see
 [GOStats](https://www.bioconductor.org/packages/release/bioc/html/GOstats.html) or
 [GSEA](https://www.gsea-msigdb.org/gsea/index.jsp])).
 
-`rrvgo` does not care about genes, but GO terms. The input is a vector enriched
+`rrvgo` does not care about genes, but GO terms. The input is a vector of enriched
 GO terms, along with (recommended, but not mandatory) a vector of scores. If scores
 are not provided, `rrvgo` takes the GO term (set) size as a score, thus favoring
 *broader* terms.
@@ -67,12 +67,13 @@ simMatrix <- calculateSimMatrix(go_analysis$ID,
                                 method="Rel")
 ```
 
-The `semdata` parameter is not mandatory as it is calculated on demand. If the
-function needs to run several times with the same organism, it's advisable to
-save the `GOSemSim::godata(orgdb, ont=ont)` object, in order to reuse it between
-calls and speedup the calculation of the similarity matrix.
+The `semdata` parameter (see `?calculateSimMatrix`) is not mandatory as it is
+calculated on demand. If the function needs to run several times with the same
+organism, it's advisable to save the `GOSemSim::godata(orgdb, ont=ont)` object,
+in order to reuse it between calls and speedup the calculation of the similarity
+matrix.
 
-From the similarity matrix one can groups terms based on similarity. `rrvgo`
+From the similarity matrix one can group terms based on similarity. `rrvgo`
 provides the `reduceSimMatrix` function for that. It takes as arguments i) the
 similarity matrix, ii) an optional *named* vector of scores associated to each
 GO term, iii) a similarity threshold used for grouping terms, and iv) an orgdb
@@ -87,13 +88,14 @@ reducedTerms <- reduceSimMatrix(simMatrix,
 ```
 
 `reduceSimMatrix` selects as the group representative the term with the higher
-score within the group. In case the vector of scores is not available, `reduceSimMatrix`
-will get the GO term size from the `OrgDb` object and use it as the score, thus
-favoring broader terms. **Please note that scores are interpreted in the direction that higher are better**, 
-therefore if you use p-values as scores, log-transform them before.
+score within the group. In case the vector of scores is not available,
+`reduceSimMatrix` will get the GO term size from the `OrgDb` object and use it
+as the score, thus favoring broader terms. **Please note that scores are
+interpreted in the direction that higher are better**, therefore if you use
+p-values as scores, minus log-transform them before.
 
-Higher the thresholds force higher similarity between terms of a groups, resulting
-in a higher number of groups.
+Higher thresholds force higher similarity between terms of a groups, resulting
+in more groups containing less similar terms.
 
 ## Plotting and interpretation
 
@@ -105,7 +107,11 @@ Plot similarity matrix as a heatmap, with clustering of columns of rows turned
 on by default (thus arranging together similar terms).
 
 ```{r}
-heatmapPlot(simMatrix, reducedTerms, annotateParent=TRUE, annotationLabel="parentTerm", fontsize=6)
+heatmapPlot(simMatrix,
+            reducedTerms,
+            annotateParent=TRUE,
+            annotationLabel="parentTerm",
+            fontsize=6)
 ```
 
 The function internally uses [`pheatmap`](https://cran.r-project.org/web/packages/pheatmap/index.html),
@@ -125,9 +131,9 @@ scatterPlot(simMatrix, reducedTerms)
 ### Treemap plot
 
 Treemaps are space-filling visualization of hierarchical structures. The terms
-are grouped (coloured) based on their parent, and the space used by the term is
+are grouped (colored) based on their parent, and the space used by the term is
 proportional to the score. Treemaps can help with the interpretation of the 
-summarized results and also comparing between differents sets of GO terms.
+summarized results and also comparing differents sets of GO terms.
 
 ```{r}
 treemapPlot(reducedTerms)
@@ -138,10 +144,10 @@ and further parameters can be passed to this function.
 
 ### Word cloud
 
-Word clouds are visualizations which reproduce putting emphasis to words which
-appear frequently in a text. Can help to identify processes and functions that
-happen more commonly in a set of enriched GO terms, as well as comparing between
-different sets.
+Word clouds are visualizations which reproduce a text putting emphasis to words
+which appear frequently in a text. They can help to identify processes and
+functions that happen more commonly in a set of enriched GO terms, as well as
+comparing between different sets.
 
 ```{r}
 wordcloudPlot(reducedTerms, min.freq=1, colors="black")
@@ -152,9 +158,9 @@ and further parameters can be passed to this function.
 
 ## Shiny app
 
-To make the software more accessible to a non-technical audience, `rrvgo` packages
-a shiny app which can be accessed calling it the `shiny_rrvgo()` function from
-the R console.
+To make the software more accessible to a non-technical audience, `rrvgo`
+packages a shiny app which can be accessed calling the `shiny_rrvgo()` function
+from the R console.
 
 ```{r, eval=FALSE}
 rrvgo::shiny_rrvgo()
