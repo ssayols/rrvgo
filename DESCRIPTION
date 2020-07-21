@@ -2,8 +2,7 @@ Package: rrvgo
 Type: Package
 Title: Reduce + Visualize GO
 Version: 1.1.1
-Author: Sergi Sayols
-Maintainer: Sergi Sayols <sergisayolspuig@gmail.com>
+Authors@R: person("Sergi", "Sayols", email = "sergisayolspuig@gmail.com", role = c("aut", "cre"))
 Description: Reduce and visualize lists of Gene Ontology terms by identifying redudance based on semantic similarity.
 License: GPL-3
 Encoding: UTF-8
