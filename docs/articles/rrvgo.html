@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", function() {
 <a href="#calculating-the-similarity-matrix-and-reducing-go-terms" class="anchor"></a>Calculating the similarity matrix and reducing GO terms</h2>
 <p>First step is to get the similarity matrix between terms. The function <code>calculateSimMatrix</code> takes a list of GO terms for which the semantic simlarity is to be calculated, an <code>OrgDb</code> object for an organism, the ontology of interest and the method to calculate the similarity scores.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit">
-<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw">rrvgo</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="kw"><a href="https://www.bioconductor.org/packages/rrvgo">rrvgo</a></span>)
 <span class="kw">go_analysis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.delim</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"extdata/example.txt"</span>, package=<span class="st">"rrvgo"</span>))
 <span class="kw">simMatrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculateSimMatrix.html">calculateSimMatrix</a></span>(<span class="kw">go_analysis</span><span class="op">$</span><span class="kw">ID</span>,
                                 orgdb=<span class="st">"org.Hs.eg.db"</span>,
