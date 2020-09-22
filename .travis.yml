@@ -6,7 +6,7 @@ cache:
 
 install:
   - R -e 'install.packages("BiocManager")'
-  - R -e 'BiocManager::install(version="devel")'
+  - R -e 'BiocManager::install(version="devel", ask=FALSE)'
   - R -e 'BiocManager::install(c("GOSemSim", "AnnotationDbi", "GO.db", "BiocCheck", "org.Hs.eg.db"), version="devel")'
   - R -e 'install.packages(c("pheatmap", "ggplot2", "ggrepel", "treemap", "tm", "wordcloud", "shiny", "shinydashboard", "DT", "plotly", "heatmaply", "magrittr", "knitr", "rmarkdown", "BiocStyle", "testthat"))'
   - wget -qO- https://raw.githubusercontent.com/Bioconductor/packagebuilder/master/check.Renviron | sed 's/_R_CHECK_FORCE_SUGGESTS_=TRUE/_R_CHECK_FORCE_SUGGESTS_=FALSE/' > /home/travis/check.Renviron
