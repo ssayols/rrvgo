@@ -4,6 +4,10 @@ cache:
   packages: true
   timeout: 1000
 
+branches:
+  except:
+  - gh-pages
+
 install:
   - R -e 'install.packages("BiocManager")'
   - R -e 'BiocManager::install(version="devel", ask=FALSE)'
