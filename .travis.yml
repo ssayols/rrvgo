@@ -19,4 +19,4 @@ script:
   - export R_CHECK_ENVIRON=/home/travis/check.Renviron
   - R CMD build .
   - R CMD check *tar.gz
-  - R CMD BiocCheck *tar.gz
+#  - R CMD BiocCheck *tar.gz
