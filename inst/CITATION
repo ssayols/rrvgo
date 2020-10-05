@@ -2,5 +2,5 @@ citEntry(entry="Manual",
          title = "rrvgo: a Bioconductor package to reduce and visualize Gene Ontology terms",
          author = personList(as.person("Sergi Sayols")),
          year = 2020,
-         url="https://github.com/ssayols/rrvgo",
+         url="https://ssayols.github.io/rrvgo",
          textVersion = "Sergi Sayols (2020). rrvgo: a Bioconductor package to reduce and visualize Gene Ontology terms")
