@@ -97,18 +97,19 @@ reduceSimMatrix <- function(simMatrix, scores=NULL, threshold=0.7, orgdb) {
   if(!is.null(scores) && !all(rownames(simMatrix) %in% names(scores))) {
     stop("scores vector does not contain all terms in the similarity matrix")
   }
+
+  # get category size, and use it as scores if they were not provided
+  sizes <- getGoSize(rownames(simMatrix), orgdb)
+  if(is.null(scores)) {
+    scores <- sizes
+  }
+  
   scores <- scores[match(rownames(simMatrix), names(scores))]
   
   # reorder the similarity matrix as in the scores, just in case they don't come in the same order
   orows <- match(rownames(simMatrix), names(scores))
   ocols <- match(colnames(simMatrix), names(scores))
   simMatrix <- simMatrix[orows, ocols]
-  
-  # get category size, and use it as scores if they were not provided
-  sizes <- getGoSize(rownames(simMatrix), orgdb)
-  if(is.null(scores)) {
-    scores <- sizes
-  }
   
   # sort matrix based on the score
   o <- rev(order(scores, sizes, na.last=FALSE))

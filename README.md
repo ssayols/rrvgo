@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.com/ssayols/rrvgo.svg?branch=master)](https://travis-ci.com/ssayols/rrvgo)
 
-# RVGO
+# RRVGO
 
 Reduce and visualize lists of Gene Ontology terms by identifying redudance based on semantic similarity.
 
@@ -40,6 +40,8 @@ To view documentation for the version of this package installed in your system, 
 ```r
 browseVignettes("rrvgo")
 ```
+
+or access the [pkgdown documentation](https://ssayols.github.io/rrvgo/index.html).
 
 ## Dependencies
 
