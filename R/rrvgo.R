@@ -95,12 +95,13 @@ reduceSimMatrix <- function(simMatrix, scores=NULL, threshold=0.7, orgdb) {
  
   # check function arguments
   if(!is.null(scores) && !all(rownames(simMatrix) %in% names(scores))) {
-    stop("scores vector does not contain all terms in the similarity matrix")
+    stop("Scores vector does not contain all terms in the similarity matrix")
   }
 
   # get category size, and use it as scores if they were not provided
   sizes <- getGoSize(rownames(simMatrix), orgdb)
   if(is.null(scores)) {
+    message("No scores provided. Falling back to term's size")
     scores <- sizes
   }
   
