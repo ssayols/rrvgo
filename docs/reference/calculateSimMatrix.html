@@ -75,7 +75,7 @@ Calculate the score similarity matrix between terms" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rrvgo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.1.4</span>
       </span>
     </div>
 
@@ -120,13 +120,13 @@ Calculate the score similarity matrix between terms</h1>
 Calculate the score similarity matrix between terms</p>
     </div>
 
-    <pre class="usage"><span class='fu'>calculateSimMatrix</span>(
-  <span class='kw'>x</span>,
-  <span class='kw'>orgdb</span>,
-  semdata = <span class='kw'>GOSemSim</span>::<span class='fu'><a href='https://rdrr.io/pkg/GOSemSim/man/godata.html'>godata</a></span>(<span class='kw'>orgdb</span>, ont = <span class='kw'>ont</span>),
-  ont = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"BP"</span>, <span class='st'>"MF"</span>, <span class='st'>"CC"</span>),
-  method = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Resnik"</span>, <span class='st'>"Lin"</span>, <span class='st'>"Rel"</span>, <span class='st'>"Jiang"</span>, <span class='st'>"Wang"</span>)
-)</pre>
+    <pre class="usage"><span class='fu'>calculateSimMatrix</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  <span class='va'>orgdb</span>,
+  semdata <span class='op'>=</span> <span class='fu'>GOSemSim</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/GOSemSim/man/godata.html'>godata</a></span><span class='op'>(</span><span class='va'>orgdb</span>, ont <span class='op'>=</span> <span class='va'>ont</span><span class='op'>)</span>,
+  ont <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"BP"</span>, <span class='st'>"MF"</span>, <span class='st'>"CC"</span><span class='op'>)</span>,
+  method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Resnik"</span>, <span class='st'>"Lin"</span>, <span class='st'>"Rel"</span>, <span class='st'>"Jiang"</span>, <span class='st'>"Wang"</span><span class='op'>)</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -167,9 +167,9 @@ namely the Resnik, Lin, Relevance, Jiang and Wang methods. See the
 section from the GOSeSim documentation for more details.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>go_analysis</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.delim</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"extdata/example.txt"</span>, package=<span class='st'>"rrvgo"</span>))
-<span class='kw'>simMatrix</span> <span class='op'>&lt;-</span> <span class='fu'>calculateSimMatrix</span>(<span class='kw'>go_analysis</span><span class='op'>$</span><span class='kw'>ID</span>, orgdb=<span class='st'>"org.Hs.eg.db"</span>, ont=<span class='st'>"BP"</span>, method=<span class='st'>"Rel"</span>)
-</div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>preparing gene to GO mapping data...</span></div><div class='output co'>#&gt; <span class='message'>preparing IC data...</span></div><div class='output co'>#&gt; <span class='warning'>Warning: Removed 5 terms that were not found in orgdb for BP</span></div></pre>
+    <pre class="examples"><div class='input'><span class='va'>go_analysis</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.delim</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata/example.txt"</span>, package<span class='op'>=</span><span class='st'>"rrvgo"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>simMatrix</span> <span class='op'>&lt;-</span> <span class='fu'>calculateSimMatrix</span><span class='op'>(</span><span class='va'>go_analysis</span><span class='op'>$</span><span class='va'>ID</span>, orgdb<span class='op'>=</span><span class='st'>"org.Hs.eg.db"</span>, ont<span class='op'>=</span><span class='st'>"BP"</span>, method<span class='op'>=</span><span class='st'>"Rel"</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; </div><div class='output co'>#&gt; <span class='message'>preparing gene to GO mapping data...</span></div><div class='output co'>#&gt; <span class='message'>preparing IC data...</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
