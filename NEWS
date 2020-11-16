@@ -1,3 +1,8 @@
+Changes in version 1.2.1
+-------------------------
+
+    * allow alternative keytypes in custom OrgDB objects
+
 Changes in version 1.1.3
 -------------------------
 

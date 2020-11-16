@@ -5,7 +5,13 @@
 \title{reduceSimMatrix
 Reduce a set of GO terms based on their semantic similarity and scores.}
 \usage{
-reduceSimMatrix(simMatrix, scores = NULL, threshold = 0.7, orgdb)
+reduceSimMatrix(
+  simMatrix,
+  scores = NULL,
+  threshold = 0.7,
+  orgdb,
+  keytype = "ENTREZID"
+)
 }
 \arguments{
 \item{simMatrix}{a (square) similarity matrix}
@@ -21,6 +27,9 @@ Defaults to Medium (0.7)}
 
 \item{orgdb}{one of org.* Bioconductor packages (the package name, or the
 orgdb object itself)}
+
+\item{keytype}{keytype passed to AnnotationDbi::keys to retrieve GO terms 
+associated to gene ids in your orgdb}
 }
 \value{
 a data.frame with all terms and it's "reducer" (NA if the term was not reduced)

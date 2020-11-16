@@ -5,13 +5,16 @@
 \title{getGoSize
 Get GO term size (# of genes)}
 \usage{
-getGoSize(terms, orgdb)
+getGoSize(terms, orgdb, keytype)
 }
 \arguments{
 \item{terms}{GO terms}
 
 \item{orgdb}{one of org.* Bioconductor packages (the package name, or the
 package itself)}
+
+\item{keytype}{keytype passed to AnnotationDbi::keys to retrieve GO terms 
+associated to gene ids in your orgdb}
 }
 \value{
 number of genes associated with each term
