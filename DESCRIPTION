@@ -1,7 +1,7 @@
 Package: rrvgo
 Type: Package
 Title: Reduce + Visualize GO
-Version: 1.1.3
+Version: 1.1.4
 Authors@R: person("Sergi", "Sayols", email = "sergisayolspuig@gmail.com", role = c("aut", "cre"))
 Description: Reduce and visualize lists of Gene Ontology terms by identifying redudance based on semantic similarity.
 URL: https://www.bioconductor.org/packages/rrvgo, https://ssayols.github.io/rrvgo/index.html
@@ -55,6 +55,6 @@ Suggests:
     org.Ss.eg.db,
     org.Xl.eg.db
 VignetteBuilder: knitr
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 biocViews: Annotation, Clustering, GO, Network, Pathways, Software
 NeedsCompilation: no

@@ -83,6 +83,8 @@ calculateSimMatrix <- function(x,
 #'  Defaults to Medium (0.7)
 #' @param orgdb one of org.* Bioconductor packages (the package name, or the
 #'   orgdb object itself)
+#' @param keytype keytype passed to AnnotationDbi::keys to retrieve GO terms 
+#'   associated to gene ids in your orgdb
 #' @return a data.frame with all terms and it's "reducer" (NA if the term was not reduced)
 #' @examples
 #' go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
@@ -91,7 +93,7 @@ calculateSimMatrix <- function(x,
 #' reducedTerms <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
 #' @importFrom stats cutree hclust
 #' @export
-reduceSimMatrix <- function(simMatrix, scores=NULL, threshold=0.7, orgdb) {
+reduceSimMatrix <- function(simMatrix, scores=NULL, threshold=0.7, orgdb, keytype="ENTREZID") {
  
   # check function arguments
   if(!is.null(scores) && !all(rownames(simMatrix) %in% names(scores))) {
@@ -99,7 +101,7 @@ reduceSimMatrix <- function(simMatrix, scores=NULL, threshold=0.7, orgdb) {
   }
 
   # get category size, and use it as scores if they were not provided
-  sizes <- getGoSize(rownames(simMatrix), orgdb)
+  sizes <- getGoSize(rownames(simMatrix), orgdb, keytype)
   if(is.null(scores)) {
     message("No scores provided. Falling back to term's size")
     scores <- sizes
@@ -138,11 +140,13 @@ reduceSimMatrix <- function(simMatrix, scores=NULL, threshold=0.7, orgdb) {
 #' @param terms GO terms
 #' @param orgdb one of org.* Bioconductor packages (the package name, or the
 #'   package itself)
+#' @param keytype keytype passed to AnnotationDbi::keys to retrieve GO terms 
+#'   associated to gene ids in your orgdb
 #' @importFrom AnnotationDbi select keys
 #' @importFrom stats setNames
 #' @importFrom methods is
 #' @return number of genes associated with each term
-getGoSize <- function(terms, orgdb) {
+getGoSize <- function(terms, orgdb, keytype) {
   if(all(is(orgdb) != "OrgDb")) {
     orgdb <- loadOrgdb(orgdb)
   }
@@ -150,9 +154,9 @@ getGoSize <- function(terms, orgdb) {
   # get all GO terms with genes associated
   go <- suppressMessages(
           AnnotationDbi::select(orgdb,
-                                keytype="ENTREZID",
+                                keytype=keytype,
                                 columns=c("GO", "ONTOLOGY"),
-                                keys=AnnotationDbi::keys(orgdb, keytype="ENTREZID")))
+                                keys=AnnotationDbi::keys(orgdb, keytype=keytype)))
   go <- go[!is.na(go$GO), ]
   go <- go[go$GO %in% terms, ]
   
