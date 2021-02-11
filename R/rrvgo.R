@@ -176,7 +176,7 @@ getGoSize <- function(terms, orgdb, keytype) {
 #' @import GO.db
 #' @return the Term slot in GO.db::GOTERM[[x]]
 getGoTerm <- function(x) {
-  sapply(x, function(x) GO.db::GOTERM[[x]]@Term)
+  sapply(x, function(x) tryCatch(GO.db::GOTERM[[x]]@Term, error=function(e) NA))
 }
 
 #' loadOrgdb
