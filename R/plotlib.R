@@ -68,15 +68,17 @@ scatterPlot <- function(simMatrix, reducedTerms, size="score", addLabel=TRUE, la
 #' treemapPlot(reducedTerms)
 #' @importFrom treemap treemap
 #' @export
-treemapPlot <- function(reducedTerms, size="score", ...) {
+treemapPlot <- function(reducedTerms, size="score", title="", ...) {
   if(!all(sapply(c("treemap"), requireNamespace, quietly=TRUE))) {
     stop("Package treemap and/or its dependencies not available. ",
          "Consider installing it before using this function.", call.=FALSE)
   }
 
-  treemap::treemap(reducedTerms, index=c("parentTerm", "term"), vSize=size, type="index", title="", 
+  treemap::treemap(reducedTerms, index=c("parentTerm", "term"), vSize=size,
+                   type="index", title=title,
                    palette=gg_color_hue(length(unique(reducedTerms$parent))),
-                   fontcolor.labels=c("#FFFFFFDD", "#00000080"), bg.labels=0, border.col="#00000080", ...)
+                   fontcolor.labels=c("#FFFFFFDD", "#00000080"), bg.labels=0,
+                   border.col="#00000080", ...)
 }
 
 #' wordlcoudPlot
