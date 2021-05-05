@@ -58,6 +58,7 @@ scatterPlot <- function(simMatrix, reducedTerms, size="score", addLabel=TRUE, la
 #' 
 #' @param reducedTerms a data.frame with the reduced terms from reduceSimMatrix()
 #' @param size what to use as point size. Can be either GO term's "size" or "score"
+#' @param title title of the plot. Defaults to nothing
 #' @param ... other parameters sent to treemap::treemap()
 #' @return A list from the call to the `treemap()` function is silently returned
 #' @examples

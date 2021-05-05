@@ -5,12 +5,14 @@
 \title{treemapPlot
 Plot GO terms as a treemap.}
 \usage{
-treemapPlot(reducedTerms, size = "score", ...)
+treemapPlot(reducedTerms, size = "score", title = "", ...)
 }
 \arguments{
 \item{reducedTerms}{a data.frame with the reduced terms from reduceSimMatrix()}
 
 \item{size}{what to use as point size. Can be either GO term's "size" or "score"}
+
+\item{title}{title of the plot. Defaults to nothing}
 
 \item{...}{other parameters sent to treemap::treemap()}
 }
