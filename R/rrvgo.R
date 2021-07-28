@@ -23,7 +23,8 @@
 #' @export
 calculateSimMatrix <- function(x,
                                orgdb,
-                               semdata=GOSemSim::godata(orgdb, ont=ont),
+                               keytype="ENTREZID",
+                               semdata=GOSemSim::godata(orgdb, ont=ont, keytype=keytype),
                                ont=c("BP", "MF", "CC"),
                                method=c("Resnik", "Lin", "Rel", "Jiang", "Wang")) {
  
