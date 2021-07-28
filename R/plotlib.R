@@ -62,11 +62,13 @@ scatterPlot <- function(simMatrix, reducedTerms, size="score", addLabel=TRUE, la
 #' @param ... other parameters sent to treemap::treemap()
 #' @return A list from the call to the `treemap()` function is silently returned
 #' @examples
+#' \dontrun{
 #' go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 #' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 #' scores <- setNames(-log10(go_analysis$qvalue), go_analysis$ID)
 #' reducedTerms <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
 #' treemapPlot(reducedTerms)
+#' }
 #' @importFrom treemap treemap
 #' @export
 treemapPlot <- function(reducedTerms, size="score", title="", ...) {
