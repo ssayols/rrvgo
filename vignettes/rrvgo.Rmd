@@ -135,9 +135,11 @@ are grouped (colored) based on their parent, and the space used by the term is
 proportional to the score. Treemaps can help with the interpretation of the 
 summarized results and also comparing differents sets of GO terms.
 
-```{r}
+```{r, eval=FALSE}
 treemapPlot(reducedTerms)
 ```
+
+![treemap](figures/treemap.png)
 
 The function internally uses [`treemap`](https://cran.r-project.org/web/packages/treemap/index.html),
 and further parameters can be passed to this function.

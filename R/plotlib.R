@@ -58,25 +58,30 @@ scatterPlot <- function(simMatrix, reducedTerms, size="score", addLabel=TRUE, la
 #' 
 #' @param reducedTerms a data.frame with the reduced terms from reduceSimMatrix()
 #' @param size what to use as point size. Can be either GO term's "size" or "score"
+#' @param title title of the plot. Defaults to nothing
 #' @param ... other parameters sent to treemap::treemap()
 #' @return A list from the call to the `treemap()` function is silently returned
 #' @examples
+#' \dontrun{
 #' go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 #' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
 #' scores <- setNames(-log10(go_analysis$qvalue), go_analysis$ID)
 #' reducedTerms <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
 #' treemapPlot(reducedTerms)
+#' }
 #' @importFrom treemap treemap
 #' @export
-treemapPlot <- function(reducedTerms, size="score", ...) {
+treemapPlot <- function(reducedTerms, size="score", title="", ...) {
   if(!all(sapply(c("treemap"), requireNamespace, quietly=TRUE))) {
     stop("Package treemap and/or its dependencies not available. ",
          "Consider installing it before using this function.", call.=FALSE)
   }
 
-  treemap::treemap(reducedTerms, index=c("parentTerm", "term"), vSize=size, type="index", title="", 
+  treemap::treemap(reducedTerms, index=c("parentTerm", "term"), vSize=size,
+                   type="index", title=title,
                    palette=gg_color_hue(length(unique(reducedTerms$parent))),
-                   fontcolor.labels=c("#FFFFFFDD", "#00000080"), bg.labels=0, border.col="#00000080", ...)
+                   fontcolor.labels=c("#FFFFFFDD", "#00000080"), bg.labels=0,
+                   border.col="#00000080", ...)
 }
 
 #' wordlcoudPlot

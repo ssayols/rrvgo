@@ -1,3 +1,8 @@
+Changes in version 1.5.1
+-------------------------
+
+    * `calculateSimMatrix()` now allows using arbitrary keys from Orgdb packages. Credit: illumination-k. Thanks!
+
 Changes in version 1.3.1
 -------------------------
 
