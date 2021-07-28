@@ -4,6 +4,8 @@
 #' @param x vector of GO terms
 #' @param orgdb one of org.* Bioconductor packages (the package name, or the
 #'   package itself)
+#' @param keytype keytype passed to AnnotationDbi::keys to retrieve GO terms 
+#'   associated to gene ids in your orgdb
 #' @param semdata object with prepared GO DATA for measuring semantic similarity
 #' @param ont ontlogy. One of c("BP", "MF", "CC")
 #' @param method distance method. One of the supported methods by GOSemSim:

@@ -20,6 +20,9 @@ calculateSimMatrix(
 \item{orgdb}{one of org.* Bioconductor packages (the package name, or the
 package itself)}
 
+\item{keytype}{keytype passed to AnnotationDbi::keys to retrieve GO terms 
+associated to gene ids in your orgdb}
+
 \item{semdata}{object with prepared GO DATA for measuring semantic similarity}
 
 \item{ont}{ontlogy. One of c("BP", "MF", "CC")}
