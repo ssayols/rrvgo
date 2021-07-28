@@ -8,7 +8,8 @@ Calculate the score similarity matrix between terms}
 calculateSimMatrix(
   x,
   orgdb,
-  semdata = GOSemSim::godata(orgdb, ont = ont),
+  keytype = "ENTREZID",
+  semdata = GOSemSim::godata(orgdb, ont = ont, keytype = keytype),
   ont = c("BP", "MF", "CC"),
   method = c("Resnik", "Lin", "Rel", "Jiang", "Wang")
 )
