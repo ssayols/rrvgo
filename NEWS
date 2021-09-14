@@ -1,3 +1,8 @@
+Changes in version 1.5.4
+-------------------------
+
+    * `scatterPlot()` doesn't warn anymore that we're using a deprecated parm to remove the guide
+
 Changes in version 1.5.1
 -------------------------
 
