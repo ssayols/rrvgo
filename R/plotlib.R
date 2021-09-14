@@ -37,8 +37,8 @@ scatterPlot <- function(simMatrix, reducedTerms, size="score", addLabel=TRUE, la
   p <-
     ggplot2::ggplot(df, ggplot2::aes(x=V1, y=V2, color=parentTerm)) +
       ggplot2::geom_point(ggplot2::aes(size=size), alpha=.5) +
-      ggplot2::scale_color_discrete(guide=FALSE) +
-      ggplot2::scale_size_continuous(guide=FALSE, range=c(0, 25)) +
+      ggplot2::scale_color_discrete(guide="none") +
+      ggplot2::scale_size_continuous(guide="none", range=c(0, 25)) +
       ggplot2::scale_x_continuous(name="") +
       ggplot2::scale_y_continuous(name="") +
       ggplot2::theme_minimal() +
