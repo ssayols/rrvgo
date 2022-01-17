@@ -1,3 +1,8 @@
+Changes in version 1.7.1
+-------------------------
+
+    * Deprecate org.Pf.plasmo.db
+
 Changes in version 1.5.4
 -------------------------
 
