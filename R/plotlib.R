@@ -19,20 +19,23 @@
 #' scatterPlot(simMatrix, reducedTerms)
 #' @import ggplot2
 #' @import ggrepel
+#' @importFrom umap umap
 #' @importFrom grid unit
 #' @importFrom stats as.dist cmdscale
 #' @export
-scatterPlot <- function(simMatrix, reducedTerms, size="score", addLabel=TRUE, labelSize=3) {
+scatterPlot <- function(simMatrix, reducedTerms, algorithm=c("pca", "umap"), size="score", addLabel=TRUE, labelSize=3) {
 
-  if(!all(sapply(c("ggplot2", "ggrepel"), requireNamespace, quietly=TRUE))) {
+  if(!all(sapply(c("ggplot2", "ggrepel", "umap"), requireNamespace, quietly=TRUE))) {
     stop("Packages ggplot2, ggrepel and/or its dependencies not available. ",
          "Consider installing them before using this function.", call.=FALSE)
   }
 
-  x <- cmdscale(as.matrix(as.dist(1-simMatrix)), eig=TRUE, k=2)
+  x <- switch(match.arg(algorithm),
+              pca =cmdscale(as.matrix(as.dist(1-simMatrix)), eig=TRUE, k=2)$points,
+              umap=umap::umap(as.matrix(as.dist(1-simMatrix)))$layout)
 
-  df <- cbind(as.data.frame(x$points),
-              reducedTerms[match(rownames(x$points), reducedTerms$go), c("term", "parent", "parentTerm", "size")])
+  df <- cbind(as.data.frame(x),
+              reducedTerms[match(rownames(x), reducedTerms$go), c("term", "parent", "parentTerm", "size")])
   
   p <-
     ggplot2::ggplot(df, ggplot2::aes(x=V1, y=V2, color=parentTerm)) +
@@ -45,7 +48,7 @@ scatterPlot <- function(simMatrix, reducedTerms, size="score", addLabel=TRUE, la
       ggplot2::theme(axis.text.x=ggplot2::element_blank(), axis.text.y=ggplot2::element_blank())
   
   if(addLabel) {
-    p + ggrepel::geom_label_repel(aes(label=parentTerm),
+    p + ggrepel::geom_label_repel(ggplot2::aes(label=parentTerm),
                                   data=subset(df, parent == rownames(df)),
                                   box.padding=grid::unit(1, "lines"), size=labelSize)
   } else {
