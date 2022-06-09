@@ -20,7 +20,8 @@ Imports: GOSemSim,
          grDevices,
          grid,
          stats,
-         methods
+         methods,
+         umap
 Suggests: 
     knitr,
     rmarkdown,

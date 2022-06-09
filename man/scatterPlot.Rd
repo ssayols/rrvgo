@@ -26,7 +26,7 @@ scatterPlot(
 aggregated terms under the parent.}
 
 \item{size}{what to use as point size. Can be either GO term's "size" or
-"score". This parameter is ignored if onlyParents is TRUE.}
+"score".}
 
 \item{addLabel}{add labels with the most representative term of the group.}
 
