@@ -9,6 +9,7 @@ scatterPlot(
   simMatrix,
   reducedTerms,
   algorithm = c("pca", "umap"),
+  onlyParents = FALSE,
   size = "score",
   addLabel = TRUE,
   labelSize = 3
@@ -21,7 +22,11 @@ scatterPlot(
 
 \item{algorithm}{algorithm for dimensionality reduction. Either pca or umap.}
 
-\item{size}{what to use as point size. Can be either GO term's "size" or "score"}
+\item{onlyParents}{plot only parent terms. Point size is the number of
+aggregated terms under the parent.}
+
+\item{size}{what to use as point size. Can be either GO term's "size" or
+"score". This parameter is ignored if onlyParents is TRUE.}
 
 \item{addLabel}{add labels with the most representative term of the group.}
 
@@ -36,7 +41,10 @@ Plot GO terms as scattered points.
 }
 \details{
 Distances between points represent the similarity between terms.
-Axes are the first 2 components of applying a PCoA to the (di)similarity matrix.
+Axes are the first 2 components of applying one of this dimensionality
+reduction algorithms:
+  - a PCoA to the (di)similarity matrix.
+  - a UMAP (Uniform Manifold Approximation and Projection,[1])
 Size of the point represents the provided scores or, in its absence, the number
 of genes the GO term contains.
 }
@@ -46,4 +54,7 @@ simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", 
 scores <- setNames(-log10(go_analysis$qvalue), go_analysis$ID)
 reducedTerms <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
 scatterPlot(simMatrix, reducedTerms)
+}
+\references{
+[1] Konopka T (2022). _umap: Uniform Manifold Approximation and Projection_. R package version 0.2.8.0, \url{https://CRAN.R-project.org/package=umap}.
 }

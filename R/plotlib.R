@@ -4,14 +4,22 @@
 #' @param simMatrix a (square) similarity matrix.
 #' @param reducedTerms a data.frame with the reduced terms from reduceSimMatrix()
 #' @param algorithm algorithm for dimensionality reduction. Either pca or umap.
-#' @param size what to use as point size. Can be either GO term's "size" or "score"
+#' @param onlyParents plot only parent terms. Point size is the number of
+#' aggregated terms under the parent.
+#' @param size what to use as point size. Can be either GO term's "size" or
+#' "score". This parameter is ignored if onlyParents is TRUE.
 #' @param addLabel add labels with the most representative term of the group.
 #' @param labelSize text size in the label.
 #' @return  ggplot2 object ready to be printed (or manipulated)
 #' @details  Distances between points represent the similarity between terms.
-#' Axes are the first 2 components of applying a PCoA to the (di)similarity matrix.
+#' Axes are the first 2 components of applying one of this dimensionality
+#' reduction algorithms:
+#'   - a PCoA to the (di)similarity matrix.
+#'   - a UMAP (Uniform Manifold Approximation and Projection,[1])
 #' Size of the point represents the provided scores or, in its absence, the number
 #' of genes the GO term contains.
+#' @references
+#' [1] Konopka T (2022). _umap: Uniform Manifold Approximation and Projection_. R package version 0.2.8.0, \url{https://CRAN.R-project.org/package=umap}.
 #' @examples
 #' go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 #' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
@@ -24,13 +32,26 @@
 #' @importFrom grid unit
 #' @importFrom stats as.dist cmdscale
 #' @export
-scatterPlot <- function(simMatrix, reducedTerms, algorithm=c("pca", "umap"), size="score", addLabel=TRUE, labelSize=3) {
+scatterPlot <- function(simMatrix,
+                        reducedTerms,
+                        algorithm=c("pca", "umap"),
+                        onlyParents=FALSE,
+                        size="score",
+                        addLabel=TRUE,
+                        labelSize=3) {
 
   if(!all(sapply(c("ggplot2", "ggrepel", "umap"), requireNamespace, quietly=TRUE))) {
-    stop("Packages ggplot2, ggrepel and/or its dependencies not available. ",
+    stop("Packages ggplot2, ggrepel, umap and/or its dependencies not available. ",
          "Consider installing them before using this function.", call.=FALSE)
   }
 
+  if(onlyParents){
+    x <- as.data.frame(table(reducedTerms$parentTerm))
+    reducedTerms <- reducedTerms[reducedTerms$term == reducedTerms$parentTerm, ]
+    simMatrix <- simMatrix[reducedTerms$go, reducedTerms$go]
+    reducedTerms$size <- x$Freq[match(reducedTerms$term, x$Var1)]
+  }
+  
   x <- switch(match.arg(algorithm),
               pca =cmdscale(as.matrix(as.dist(1-simMatrix)), eig=TRUE, k=2)$points,
               umap=umap::umap(as.matrix(as.dist(1-simMatrix)))$layout)
