@@ -8,6 +8,7 @@ Plot GO terms as scattered points.}
 scatterPlot(
   simMatrix,
   reducedTerms,
+  algorithm = c("pca", "umap"),
   size = "score",
   addLabel = TRUE,
   labelSize = 3
@@ -18,6 +19,8 @@ scatterPlot(
 
 \item{reducedTerms}{a data.frame with the reduced terms from reduceSimMatrix()}
 
+\item{algorithm}{algorithm for dimensionality reduction. Either pca or umap.}
+
 \item{size}{what to use as point size. Can be either GO term's "size" or "score"}
 
 \item{addLabel}{add labels with the most representative term of the group.}
@@ -25,7 +28,7 @@ scatterPlot(
 \item{labelSize}{text size in the label.}
 }
 \value{
-ggplot2 object raedy to be printed (or manipulated)
+ggplot2 object ready to be printed (or manipulated)
 }
 \description{
 scatterPlot

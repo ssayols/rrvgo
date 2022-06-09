@@ -3,10 +3,11 @@
 #' 
 #' @param simMatrix a (square) similarity matrix.
 #' @param reducedTerms a data.frame with the reduced terms from reduceSimMatrix()
+#' @param algorithm algorithm for dimensionality reduction. Either pca or umap.
 #' @param size what to use as point size. Can be either GO term's "size" or "score"
 #' @param addLabel add labels with the most representative term of the group.
 #' @param labelSize text size in the label.
-#' @return  ggplot2 object raedy to be printed (or manipulated)
+#' @return  ggplot2 object ready to be printed (or manipulated)
 #' @details  Distances between points represent the similarity between terms.
 #' Axes are the first 2 components of applying a PCoA to the (di)similarity matrix.
 #' Size of the point represents the provided scores or, in its absence, the number
