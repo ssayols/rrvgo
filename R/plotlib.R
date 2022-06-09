@@ -7,7 +7,7 @@
 #' @param onlyParents plot only parent terms. Point size is the number of
 #' aggregated terms under the parent.
 #' @param size what to use as point size. Can be either GO term's "size" or
-#' "score". This parameter is ignored if onlyParents is TRUE.
+#' "score".
 #' @param addLabel add labels with the most representative term of the group.
 #' @param labelSize text size in the label.
 #' @return  ggplot2 object ready to be printed (or manipulated)
@@ -49,7 +49,7 @@ scatterPlot <- function(simMatrix,
     x <- as.data.frame(table(reducedTerms$parentTerm))
     reducedTerms <- reducedTerms[reducedTerms$term == reducedTerms$parentTerm, ]
     simMatrix <- simMatrix[reducedTerms$go, reducedTerms$go]
-    reducedTerms$size <- x$Freq[match(reducedTerms$term, x$Var1)]
+    reducedTerms[, size] <- x$Freq[match(reducedTerms$term, x$Var1)]
   }
   
   x <- switch(match.arg(algorithm),
@@ -57,11 +57,11 @@ scatterPlot <- function(simMatrix,
               umap=umap::umap(as.matrix(as.dist(1-simMatrix)))$layout)
 
   df <- cbind(as.data.frame(x),
-              reducedTerms[match(rownames(x), reducedTerms$go), c("term", "parent", "parentTerm", "size")])
+              reducedTerms[match(rownames(x), reducedTerms$go), c("term", "parent", "parentTerm", size)])
   
   p <-
     ggplot2::ggplot(df, ggplot2::aes(x=V1, y=V2, color=parentTerm)) +
-      ggplot2::geom_point(ggplot2::aes(size=size), alpha=.5) +
+      ggplot2::geom_point(ggplot2::aes_string(size=size), alpha=.5) +
       ggplot2::scale_color_discrete(guide="none") +
       ggplot2::scale_size_continuous(guide="none", range=c(0, 25)) +
       ggplot2::scale_x_continuous(name="") +
