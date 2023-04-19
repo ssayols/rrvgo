@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.com/ssayols/rrvgo.svg?branch=master)](https://travis-ci.com/ssayols/rrvgo)
-<div data-badge-popover="right" data-badge-type="1" data-doi="10.18129/B9.bioc.rrvgo" class="altmetric-embed"></div>
+[![](https://img.shields.io/badge/Altmetric-9-blue.svg)](https://www.altmetric.com/details/146058947)
 
 # RRVGO
 
