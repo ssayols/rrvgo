@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rrvgo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.10.1</span>
       </span>
     </div>
 
@@ -63,7 +63,7 @@
                         <h4 data-toc-skip class="author">Sergi
 Sayols</h4>
             
-            <h4 data-toc-skip class="date">2022-06-09</h4>
+            <h4 data-toc-skip class="date">2023-04-19</h4>
       
       
       <div class="hidden name"><code>rrvgo.Rmd</code></div>
@@ -126,12 +126,12 @@ which the semantic simlarity is to be calculated, an <code>OrgDb</code>
 object for an organism, the ontology of interest and the method to
 calculate the similarity scores.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.bioconductor.org/packages/rrvgo" class="external-link">rrvgo</a></span><span class="op">)</span>
-<span class="va">go_analysis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/example.txt"</span>, package<span class="op">=</span><span class="st">"rrvgo"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">simMatrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculateSimMatrix.html">calculateSimMatrix</a></span><span class="op">(</span><span class="va">go_analysis</span><span class="op">$</span><span class="va">ID</span>,
-                                orgdb<span class="op">=</span><span class="st">"org.Hs.eg.db"</span>,
-                                ont<span class="op">=</span><span class="st">"BP"</span>,
-                                method<span class="op">=</span><span class="st">"Rel"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.bioconductor.org/packages/rrvgo" class="external-link">rrvgo</a></span><span class="op">)</span></span>
+<span><span class="va">go_analysis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/example.txt"</span>, package<span class="op">=</span><span class="st">"rrvgo"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">simMatrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculateSimMatrix.html">calculateSimMatrix</a></span><span class="op">(</span><span class="va">go_analysis</span><span class="op">$</span><span class="va">ID</span>,</span>
+<span>                                orgdb<span class="op">=</span><span class="st">"org.Hs.eg.db"</span>,</span>
+<span>                                ont<span class="op">=</span><span class="st">"BP"</span>,</span>
+<span>                                method<span class="op">=</span><span class="st">"Rel"</span><span class="op">)</span></span></code></pre></div>
 <p>The <code>semdata</code> parameter (see
 <code><a href="../reference/calculateSimMatrix.html">?calculateSimMatrix</a></code>) is not mandatory as it is calculated
 on demand. If the function needs to run several times with the same
@@ -146,11 +146,11 @@ optional <em>named</em> vector of scores associated to each GO term,
 iii) a similarity threshold used for grouping terms, and iv) an orgdb
 object.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">go_analysis</span><span class="op">$</span><span class="va">qvalue</span><span class="op">)</span>, <span class="va">go_analysis</span><span class="op">$</span><span class="va">ID</span><span class="op">)</span>
-<span class="va">reducedTerms</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/reduceSimMatrix.html">reduceSimMatrix</a></span><span class="op">(</span><span class="va">simMatrix</span>,
-                                <span class="va">scores</span>,
-                                threshold<span class="op">=</span><span class="fl">0.7</span>,
-                                orgdb<span class="op">=</span><span class="st">"org.Hs.eg.db"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">go_analysis</span><span class="op">$</span><span class="va">qvalue</span><span class="op">)</span>, <span class="va">go_analysis</span><span class="op">$</span><span class="va">ID</span><span class="op">)</span></span>
+<span><span class="va">reducedTerms</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/reduceSimMatrix.html">reduceSimMatrix</a></span><span class="op">(</span><span class="va">simMatrix</span>,</span>
+<span>                                <span class="va">scores</span>,</span>
+<span>                                threshold<span class="op">=</span><span class="fl">0.7</span>,</span>
+<span>                                orgdb<span class="op">=</span><span class="st">"org.Hs.eg.db"</span><span class="op">)</span></span></code></pre></div>
 <p><code>reduceSimMatrix</code> selects as the group representative the
 term with the higher score within the group. In case the vector of
 scores is not available, <code>reduceSimMatrix</code> will get the GO
@@ -172,11 +172,11 @@ interpreting the results.</p>
 <p>Plot similarity matrix as a heatmap, with clustering of columns of
 rows turned on by default (thus arranging together similar terms).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/heatmapPlot.html">heatmapPlot</a></span><span class="op">(</span><span class="va">simMatrix</span>,
-            <span class="va">reducedTerms</span>,
-            annotateParent<span class="op">=</span><span class="cn">TRUE</span>,
-            annotationLabel<span class="op">=</span><span class="st">"parentTerm"</span>,
-            fontsize<span class="op">=</span><span class="fl">6</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/heatmapPlot.html">heatmapPlot</a></span><span class="op">(</span><span class="va">simMatrix</span>,</span>
+<span>            <span class="va">reducedTerms</span>,</span>
+<span>            annotateParent<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>            annotationLabel<span class="op">=</span><span class="st">"parentTerm"</span>,</span>
+<span>            fontsize<span class="op">=</span><span class="fl">6</span><span class="op">)</span></span></code></pre></div>
 <p><img src="rrvgo_files/figure-html/unnamed-chunk-3-1.png" width="700"></p>
 <p>The function internally uses <a href="https://cran.r-project.org/web/packages/pheatmap/index.html" class="external-link"><code>pheatmap</code></a>,
 and further parameters can be passed to this function.</p>
@@ -190,7 +190,7 @@ applying a PCoA to the (di)similarity matrix. Size of the point
 represents the provided scores or, in its absence, the number of genes
 the GO term contains.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">simMatrix</span>, <span class="va">reducedTerms</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">simMatrix</span>, <span class="va">reducedTerms</span><span class="op">)</span></span></code></pre></div>
 <p><img src="rrvgo_files/figure-html/unnamed-chunk-4-1.png" width="700"></p>
 </div>
 <div class="section level4">
@@ -202,7 +202,7 @@ used by the term is proportional to the score. Treemaps can help with
 the interpretation of the summarized results and also comparing
 differents sets of GO terms.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/treemapPlot.html">treemapPlot</a></span><span class="op">(</span><span class="va">reducedTerms</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/treemapPlot.html">treemapPlot</a></span><span class="op">(</span><span class="va">reducedTerms</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="figures/treemap.png" alt=""><p class="caption">treemap</p>
 </div>
@@ -217,7 +217,7 @@ emphasis to words which appear frequently in a text. They can help to
 identify processes and functions that happen more commonly in a set of
 enriched GO terms, as well as comparing between different sets.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/wordcloudPlot.html">wordcloudPlot</a></span><span class="op">(</span><span class="va">reducedTerms</span>, min.freq<span class="op">=</span><span class="fl">1</span>, colors<span class="op">=</span><span class="st">"black"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/wordcloudPlot.html">wordcloudPlot</a></span><span class="op">(</span><span class="va">reducedTerms</span>, min.freq<span class="op">=</span><span class="fl">1</span>, colors<span class="op">=</span><span class="st">"black"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="rrvgo_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
 <p>The function internally uses <a href="https://cran.r-project.org/web/packages/wordcloud/index.html" class="external-link"><code>wrodcloud</code></a>,
 and further parameters can be passed to this function.</p>
@@ -230,7 +230,7 @@ and further parameters can be passed to this function.</p>
 <code>rrvgo</code> packages a shiny app which can be accessed calling
 the <code><a href="../reference/shiny_rrvgo.html">shiny_rrvgo()</a></code> function from the R console.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">rrvgo</span><span class="fu">::</span><span class="fu"><a href="../reference/shiny_rrvgo.html">shiny_rrvgo</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">rrvgo</span><span class="fu">::</span><span class="fu"><a href="../reference/shiny_rrvgo.html">shiny_rrvgo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="figure">
 <img src="figures/shiny_app.png" alt=""><p class="caption">shiny_app</p>
 </div>
@@ -348,8 +348,8 @@ your own <code>OrgDb</code> object usign the <a href="https://bioconductor.org/p
 package and rendering the necessary data for semantic similarity using
 the <code>GOSemSim</code> package with:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">my_new_fancy_orgdb_object</span> <span class="op">&lt;-</span> <span class="st">'org.Zz.eg.db'</span>
-<span class="va">hsGO</span> <span class="op">&lt;-</span> <span class="fu">GOSemSim</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/GOSemSim/man/godata.html" class="external-link">godata</a></span><span class="op">(</span><span class="va">my_new_fancy_orgdb_object</span>, ont<span class="op">=</span><span class="st">"MF"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">my_new_fancy_orgdb_object</span> <span class="op">&lt;-</span> <span class="st">'org.Zz.eg.db'</span></span>
+<span><span class="va">hsGO</span> <span class="op">&lt;-</span> <span class="fu">GOSemSim</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/GOSemSim/man/godata.html" class="external-link">godata</a></span><span class="op">(</span><span class="va">my_new_fancy_orgdb_object</span>, ont<span class="op">=</span><span class="st">"MF"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="gene-ontologies">Gene Ontologies<a class="anchor" aria-label="anchor" href="#gene-ontologies"></a>
@@ -373,21 +373,24 @@ means of grade III vs. grade I samples ( 34 vs. 29 repectively).</p>
 <p>Please consider citing rrvgo if used in support of your own
 research:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"rrvgo"</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## </span>
-<span class="co">## To cite package 'rrvgo' in publications use:</span>
-<span class="co">## </span>
-<span class="co">##   Sergi Sayols (2020). rrvgo: a Bioconductor package to reduce and</span>
-<span class="co">##   visualize Gene Ontology terms</span>
-<span class="co">## </span>
-<span class="co">## A BibTeX entry for LaTeX users is</span>
-<span class="co">## </span>
-<span class="co">##   @Manual{,</span>
-<span class="co">##     title = {rrvgo: a Bioconductor package to reduce and visualize Gene Ontology terms},</span>
-<span class="co">##     author = {Sergi Sayols},</span>
-<span class="co">##     year = {2020},</span>
-<span class="co">##     url = {https://ssayols.github.io/rrvgo},</span>
-<span class="co">##   }</span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"rrvgo"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## </span></span>
+<span><span class="co">## To cite package 'rrvgo' in publications use:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##   Sayols, S (2023). rrvgo: a Bioconductor package for interpreting</span></span>
+<span><span class="co">##   lists of Gene Ontology terms. microPublication Biology.</span></span>
+<span><span class="co">##   10.17912/micropub.biology.000811</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## A BibTeX entry for LaTeX users is</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##   @Article{,</span></span>
+<span><span class="co">##     title = {rrvgo: a Bioconductor package to reduce and visualize Gene Ontology terms},</span></span>
+<span><span class="co">##     author = {Sergi Sayols},</span></span>
+<span><span class="co">##     year = {2023},</span></span>
+<span><span class="co">##     journal = {microPublication Biology},</span></span>
+<span><span class="co">##     doi = {10.17912/micropub.biology.000811},</span></span>
+<span><span class="co">##     url = {https://www.micropublication.org/journals/biology/micropub-biology-000811},</span></span>
+<span><span class="co">##   }</span></span></code></pre>
 <div class="section level3">
 <h3 id="reporting-problems-or-bugs">Reporting problems or bugs<a class="anchor" aria-label="anchor" href="#reporting-problems-or-bugs"></a>
 </h3>
@@ -400,65 +403,65 @@ unreported feature, you can report it using the <a href="https://github.com/ssay
 </h3>
 <p>The following package and versions were used in the production of
 this vignette.</p>
-<pre><code><span class="co">## R version 4.2.0 (2022-04-22)</span>
-<span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span>
-<span class="co">## Running under: Ubuntu 20.04.4 LTS</span>
-<span class="co">## </span>
-<span class="co">## Matrix products: default</span>
-<span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/atlas/libblas.so.3.10.3</span>
-<span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/atlas/liblapack.so.3.10.3</span>
-<span class="co">## </span>
-<span class="co">## locale:</span>
-<span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span>
-<span class="co">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span>
-<span class="co">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span>
-<span class="co">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span>
-<span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span>
-<span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span>
-<span class="co">## </span>
-<span class="co">## attached base packages:</span>
-<span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
-<span class="co">## </span>
-<span class="co">## other attached packages:</span>
-<span class="co">## [1] rrvgo_1.8.1      knitr_1.39       BiocStyle_2.24.0</span>
-<span class="co">## </span>
-<span class="co">## loaded via a namespace (and not attached):</span>
-<span class="co">##   [1] bitops_1.0-7           fs_1.5.2               bit64_4.0.5           </span>
-<span class="co">##   [4] RColorBrewer_1.1-3     httr_1.4.3             rprojroot_2.0.3       </span>
-<span class="co">##   [7] GenomeInfoDb_1.32.2    tools_4.2.0            bslib_0.3.1           </span>
-<span class="co">##  [10] utf8_1.2.2             R6_2.5.1               DBI_1.1.2             </span>
-<span class="co">##  [13] BiocGenerics_0.42.0    colorspace_2.0-3       tidyselect_1.1.2      </span>
-<span class="co">##  [16] bit_4.0.4              compiler_4.2.0         textshaping_0.3.6     </span>
-<span class="co">##  [19] cli_3.3.0              Biobase_2.56.0         xml2_1.3.3            </span>
-<span class="co">##  [22] NLP_0.2-1              desc_1.4.1             labeling_0.4.2        </span>
-<span class="co">##  [25] slam_0.1-50            bookdown_0.26          sass_0.4.1            </span>
-<span class="co">##  [28] scales_1.2.0           tm_0.7-8               askpass_1.1           </span>
-<span class="co">##  [31] pkgdown_2.0.3          systemfonts_1.0.4      stringr_1.4.0         </span>
-<span class="co">##  [34] digest_0.6.29          rmarkdown_2.14         XVector_0.36.0        </span>
-<span class="co">##  [37] pkgconfig_2.0.3        htmltools_0.5.2        umap_0.2.8.0          </span>
-<span class="co">##  [40] highr_0.9              fastmap_1.1.0          rlang_1.0.2           </span>
-<span class="co">##  [43] rstudioapi_0.13        RSQLite_2.2.14         treemap_2.4-3         </span>
-<span class="co">##  [46] shiny_1.7.1            farver_2.1.0           jquerylib_0.1.4       </span>
-<span class="co">##  [49] generics_0.1.2         jsonlite_1.8.0         GOSemSim_2.22.0       </span>
-<span class="co">##  [52] dplyr_1.0.9            RCurl_1.98-1.6         magrittr_2.0.3        </span>
-<span class="co">##  [55] GO.db_3.15.0           GenomeInfoDbData_1.2.8 wordcloud_2.6         </span>
-<span class="co">##  [58] Matrix_1.4-1           Rcpp_1.0.8.3           munsell_0.5.0         </span>
-<span class="co">##  [61] S4Vectors_0.34.0       fansi_1.0.3            reticulate_1.25       </span>
-<span class="co">##  [64] lifecycle_1.0.1        stringi_1.7.6          yaml_2.3.5            </span>
-<span class="co">##  [67] zlibbioc_1.42.0        org.Hs.eg.db_3.15.0    grid_4.2.0            </span>
-<span class="co">##  [70] blob_1.2.3             parallel_4.2.0         promises_1.2.0.1      </span>
-<span class="co">##  [73] ggrepel_0.9.1          crayon_1.5.1           lattice_0.20-45       </span>
-<span class="co">##  [76] Biostrings_2.64.0      KEGGREST_1.36.0        pillar_1.7.0          </span>
-<span class="co">##  [79] igraph_1.3.1           codetools_0.2-18       stats4_4.2.0          </span>
-<span class="co">##  [82] glue_1.6.2             evaluate_0.15          data.table_1.14.2     </span>
-<span class="co">##  [85] BiocManager_1.30.18    png_0.1-7              vctrs_0.4.1           </span>
-<span class="co">##  [88] httpuv_1.6.5           openssl_2.0.1          gtable_0.3.0          </span>
-<span class="co">##  [91] purrr_0.3.4            assertthat_0.2.1       cachem_1.0.6          </span>
-<span class="co">##  [94] ggplot2_3.3.6          gridBase_0.4-7         xfun_0.31             </span>
-<span class="co">##  [97] mime_0.12              xtable_1.8-4           RSpectra_0.16-1       </span>
-<span class="co">## [100] later_1.3.0            ragg_1.2.2             tibble_3.1.7          </span>
-<span class="co">## [103] pheatmap_1.0.12        AnnotationDbi_1.58.0   memoise_2.0.1         </span>
-<span class="co">## [106] IRanges_2.30.0         ellipsis_0.3.2</span></code></pre>
+<pre><code><span><span class="co">## R version 4.2.2 Patched (2022-11-10 r83330)</span></span>
+<span><span class="co">## Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
+<span><span class="co">## Running under: Debian GNU/Linux 12 (bookworm)</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Matrix products: default</span></span>
+<span><span class="co">## BLAS:   /usr/lib/x86_64-linux-gnu/atlas/libblas.so.3.10.3</span></span>
+<span><span class="co">## LAPACK: /usr/lib/x86_64-linux-gnu/atlas/liblapack.so.3.10.3</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## locale:</span></span>
+<span><span class="co">##  [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              </span></span>
+<span><span class="co">##  [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    </span></span>
+<span><span class="co">##  [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   </span></span>
+<span><span class="co">##  [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 </span></span>
+<span><span class="co">##  [9] LC_ADDRESS=C               LC_TELEPHONE=C            </span></span>
+<span><span class="co">## [11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## attached base packages:</span></span>
+<span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## other attached packages:</span></span>
+<span><span class="co">## [1] rrvgo_1.10.1     knitr_1.42       BiocStyle_2.26.0</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## loaded via a namespace (and not attached):</span></span>
+<span><span class="co">##   [1] bitops_1.0-7           fs_1.6.1               bit64_4.0.5           </span></span>
+<span><span class="co">##   [4] RColorBrewer_1.1-3     httr_1.4.5             rprojroot_2.0.3       </span></span>
+<span><span class="co">##   [7] GenomeInfoDb_1.34.9    tools_4.2.2            bslib_0.4.2           </span></span>
+<span><span class="co">##  [10] utf8_1.2.3             R6_2.5.1               DBI_1.1.3             </span></span>
+<span><span class="co">##  [13] BiocGenerics_0.44.0    colorspace_2.1-0       withr_2.5.0           </span></span>
+<span><span class="co">##  [16] tidyselect_1.2.0       bit_4.0.5              compiler_4.2.2        </span></span>
+<span><span class="co">##  [19] textshaping_0.3.6      cli_3.6.1              Biobase_2.58.0        </span></span>
+<span><span class="co">##  [22] xml2_1.3.3             NLP_0.2-1              desc_1.4.2            </span></span>
+<span><span class="co">##  [25] labeling_0.4.2         bookdown_0.33          slam_0.1-50           </span></span>
+<span><span class="co">##  [28] sass_0.4.5             scales_1.2.1           tm_0.7-11             </span></span>
+<span><span class="co">##  [31] askpass_1.1            pkgdown_2.0.7          systemfonts_1.0.4     </span></span>
+<span><span class="co">##  [34] stringr_1.5.0          digest_0.6.31          rmarkdown_2.21        </span></span>
+<span><span class="co">##  [37] XVector_0.38.0         pkgconfig_2.0.3        htmltools_0.5.5       </span></span>
+<span><span class="co">##  [40] umap_0.2.10.0          highr_0.10             fastmap_1.1.1         </span></span>
+<span><span class="co">##  [43] rlang_1.1.0            RSQLite_2.3.1          treemap_2.4-3         </span></span>
+<span><span class="co">##  [46] shiny_1.7.4            farver_2.1.1           jquerylib_0.1.4       </span></span>
+<span><span class="co">##  [49] generics_0.1.3         jsonlite_1.8.4         GOSemSim_2.24.0       </span></span>
+<span><span class="co">##  [52] dplyr_1.1.1            RCurl_1.98-1.12        magrittr_2.0.3        </span></span>
+<span><span class="co">##  [55] GO.db_3.16.0           GenomeInfoDbData_1.2.9 wordcloud_2.6         </span></span>
+<span><span class="co">##  [58] Matrix_1.5-3           Rcpp_1.0.10            munsell_0.5.0         </span></span>
+<span><span class="co">##  [61] S4Vectors_0.36.2       fansi_1.0.4            reticulate_1.28       </span></span>
+<span><span class="co">##  [64] lifecycle_1.0.3        stringi_1.7.12         yaml_2.3.7            </span></span>
+<span><span class="co">##  [67] zlibbioc_1.44.0        org.Hs.eg.db_3.16.0    grid_4.2.2            </span></span>
+<span><span class="co">##  [70] blob_1.2.4             parallel_4.2.2         promises_1.2.0.1      </span></span>
+<span><span class="co">##  [73] ggrepel_0.9.3          crayon_1.5.2           lattice_0.20-45       </span></span>
+<span><span class="co">##  [76] Biostrings_2.66.0      KEGGREST_1.38.0        pillar_1.9.0          </span></span>
+<span><span class="co">##  [79] igraph_1.4.2           codetools_0.2-19       stats4_4.2.2          </span></span>
+<span><span class="co">##  [82] glue_1.6.2             evaluate_0.20          data.table_1.14.8     </span></span>
+<span><span class="co">##  [85] BiocManager_1.30.20    png_0.1-8              vctrs_0.6.1           </span></span>
+<span><span class="co">##  [88] httpuv_1.6.9           openssl_2.0.6          gtable_0.3.3          </span></span>
+<span><span class="co">##  [91] purrr_1.0.1            cachem_1.0.7           ggplot2_3.4.2         </span></span>
+<span><span class="co">##  [94] xfun_0.38              gridBase_0.4-7         mime_0.12             </span></span>
+<span><span class="co">##  [97] xtable_1.8-4           RSpectra_0.16-1        later_1.3.0           </span></span>
+<span><span class="co">## [100] ragg_1.2.5             tibble_3.2.1           pheatmap_1.0.12       </span></span>
+<span><span class="co">## [103] AnnotationDbi_1.60.2   memoise_2.0.1          IRanges_2.32.0        </span></span>
+<span><span class="co">## [106] ellipsis_0.3.2</span></span></code></pre>
 </div>
 </div>
   </div>
@@ -480,7 +483,7 @@ this vignette.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

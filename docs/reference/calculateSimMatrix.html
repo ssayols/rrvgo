@@ -20,7 +20,7 @@ Calculate the score similarity matrix between terms"><!-- mathjax --><script src
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rrvgo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.10.1</span>
       </span>
     </div>
 
@@ -52,37 +52,50 @@ Calculate the score similarity matrix between terms</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">calculateSimMatrix</span><span class="op">(</span>
-  <span class="va">x</span>,
-  <span class="va">orgdb</span>,
-  keytype <span class="op">=</span> <span class="st">"ENTREZID"</span>,
-  semdata <span class="op">=</span> <span class="fu">GOSemSim</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/GOSemSim/man/godata.html" class="external-link">godata</a></span><span class="op">(</span><span class="va">orgdb</span>, ont <span class="op">=</span> <span class="va">ont</span>, keytype <span class="op">=</span> <span class="va">keytype</span><span class="op">)</span>,
-  ont <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BP"</span>, <span class="st">"MF"</span>, <span class="st">"CC"</span><span class="op">)</span>,
-  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Resnik"</span>, <span class="st">"Lin"</span>, <span class="st">"Rel"</span>, <span class="st">"Jiang"</span>, <span class="st">"Wang"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calculateSimMatrix</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  <span class="va">orgdb</span>,</span>
+<span>  keytype <span class="op">=</span> <span class="st">"ENTREZID"</span>,</span>
+<span>  semdata <span class="op">=</span> <span class="fu">GOSemSim</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/GOSemSim/man/godata.html" class="external-link">godata</a></span><span class="op">(</span><span class="va">orgdb</span>, ont <span class="op">=</span> <span class="va">ont</span>, keytype <span class="op">=</span> <span class="va">keytype</span><span class="op">)</span>,</span>
+<span>  ont <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"BP"</span>, <span class="st">"MF"</span>, <span class="st">"CC"</span><span class="op">)</span>,</span>
+<span>  method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Resnik"</span>, <span class="st">"Lin"</span>, <span class="st">"Rel"</span>, <span class="st">"Jiang"</span>, <span class="st">"Wang"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>x</dt>
 <dd><p>vector of GO terms</p></dd>
+
+
 <dt>orgdb</dt>
 <dd><p>one of org.* Bioconductor packages (the package name, or the
 package itself)</p></dd>
+
+
 <dt>keytype</dt>
 <dd><p>keytype passed to AnnotationDbi::keys to retrieve GO terms 
 associated to gene ids in your orgdb</p></dd>
+
+
 <dt>semdata</dt>
 <dd><p>object with prepared GO DATA for measuring semantic similarity</p></dd>
+
+
 <dt>ont</dt>
 <dd><p>ontlogy. One of c("BP", "MF", "CC")</p></dd>
+
+
 <dt>method</dt>
 <dd><p>distance method. One of the supported methods by GOSemSim:
 c("Resnik", "Lin", "Rel", "Jiang", "Wang")</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a square matrix with similarity scores between terms</p>
+    
+
+<p>a square matrix with similarity scores between terms</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -95,8 +108,8 @@ section from the GOSeSim documentation for more details.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">go_analysis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/example.txt"</span>, package<span class="op">=</span><span class="st">"rrvgo"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">simMatrix</span> <span class="op">&lt;-</span> <span class="fu">calculateSimMatrix</span><span class="op">(</span><span class="va">go_analysis</span><span class="op">$</span><span class="va">ID</span>, orgdb<span class="op">=</span><span class="st">"org.Hs.eg.db"</span>, ont<span class="op">=</span><span class="st">"BP"</span>, method<span class="op">=</span><span class="st">"Rel"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">go_analysis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/example.txt"</span>, package<span class="op">=</span><span class="st">"rrvgo"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">simMatrix</span> <span class="op">&lt;-</span> <span class="fu">calculateSimMatrix</span><span class="op">(</span><span class="va">go_analysis</span><span class="op">$</span><span class="va">ID</span>, orgdb<span class="op">=</span><span class="st">"org.Hs.eg.db"</span>, ont<span class="op">=</span><span class="st">"BP"</span>, method<span class="op">=</span><span class="st">"Rel"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> preparing gene to GO mapping data...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> preparing IC data...</span>
@@ -114,7 +127,7 @@ section from the GOSeSim documentation for more details.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

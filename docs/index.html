@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rrvgo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.10.1</span>
       </span>
     </div>
 
@@ -59,10 +59,7 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<a href="https://travis-ci.com/ssayols/rrvgo" class="external-link"><img src="https://travis-ci.com/ssayols/rrvgo.svg?branch=master" alt="Build Status"></a>
-<div class="altmetric-embed" data-badge-popover="right" data-badge-type="1" data-doi="10.18129/B9.bioc.rrvgo">
 
-</div>
 <div class="section level1">
 <div class="page-header"><h1 id="rrvgo">RRVGO<a class="anchor" aria-label="anchor" href="#rrvgo"></a>
 </h1></div>
@@ -79,17 +76,17 @@
 </h2>
 <p>To install this package, start R and enter:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span>
-    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span>
-
-<span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"rrvgo"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/BiocManager/man/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"rrvgo"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h2>
 <p>To view documentation for the version of this package installed in your system, start R and enter:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html" class="external-link">browseVignettes</a></span><span class="op">(</span><span class="st">"rrvgo"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/browseVignettes.html" class="external-link">browseVignettes</a></span><span class="op">(</span><span class="st">"rrvgo"</span><span class="op">)</span></span></code></pre></div>
 <p>or access the <a href="https://ssayols.github.io/rrvgo/index.html" class="external-link">pkgdown documentation</a>.</p>
 </div>
 <div class="section level2">
@@ -159,6 +156,11 @@
 </ul>
 </div>
 </div>
+<div class="section level2">
+<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
+</h2>
+<p>Sayols, S (2023). rrvgo: a Bioconductor package for interpreting lists of Gene Ontology terms. microPublication Biology. <a href="http://dx.doi.org/10.17912/micropub.biology.000811" class="external-link">doi: 10.17912/micropub.biology.000811</a>.</p>
+</div>
 </div>
 
   </div>
@@ -193,7 +195,13 @@
 </ul>
 </div>
 
-
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://travis-ci.com/ssayols/rrvgo" class="external-link"><img src="https://travis-ci.com/ssayols/rrvgo.svg?branch=master" alt="Build Status"></a></li>
+<li><a href="https://www.altmetric.com/details/146058947" class="external-link"><img src="https://img.shields.io/badge/Altmetric-9-blue.svg"></a></li>
+</ul>
+</div>
 
   </div>
 </div>
@@ -206,7 +214,7 @@
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

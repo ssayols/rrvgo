@@ -20,7 +20,7 @@ Reduce a set of GO terms based on their semantic similarity and scores."><!-- ma
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rrvgo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.8.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.10.1</span>
       </span>
     </div>
 
@@ -52,38 +52,49 @@ Reduce a set of GO terms based on their semantic similarity and scores.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">reduceSimMatrix</span><span class="op">(</span>
-  <span class="va">simMatrix</span>,
-  scores <span class="op">=</span> <span class="cn">NULL</span>,
-  threshold <span class="op">=</span> <span class="fl">0.7</span>,
-  <span class="va">orgdb</span>,
-  keytype <span class="op">=</span> <span class="st">"ENTREZID"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">reduceSimMatrix</span><span class="op">(</span></span>
+<span>  <span class="va">simMatrix</span>,</span>
+<span>  scores <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  threshold <span class="op">=</span> <span class="fl">0.7</span>,</span>
+<span>  <span class="va">orgdb</span>,</span>
+<span>  keytype <span class="op">=</span> <span class="st">"ENTREZID"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>simMatrix</dt>
 <dd><p>a (square) similarity matrix</p></dd>
+
+
 <dt>scores</dt>
 <dd><p>*named* vector with scores (weights) assigned to each term.
 Higher is better. Can be NULL (default, means no scores. In this case, a default score
 based on set size is assigned, thus favoring larger sets). Note: if you have
 p-values as scores, consider -1*log-transforming them (`-log(p)`)</p></dd>
+
+
 <dt>threshold</dt>
 <dd><p>similarity threshold (0-1). Some guidance:
 Large (allowed similarity=0.9), Medium (0.7), Small (0.5), Tiny (0.4)
 Defaults to Medium (0.7)</p></dd>
+
+
 <dt>orgdb</dt>
 <dd><p>one of org.* Bioconductor packages (the package name, or the
 orgdb object itself)</p></dd>
+
+
 <dt>keytype</dt>
 <dd><p>keytype passed to AnnotationDbi::keys to retrieve GO terms 
 associated to gene ids in your orgdb</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a data.frame with all terms and it's "reducer" (NA if the term was not reduced)</p>
+    
+
+<p>a data.frame with all terms and it's "reducer" (NA if the term was not reduced)</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -99,12 +110,12 @@ the same group).</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">go_analysis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/example.txt"</span>, package<span class="op">=</span><span class="st">"rrvgo"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">simMatrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="calculateSimMatrix.html">calculateSimMatrix</a></span><span class="op">(</span><span class="va">go_analysis</span><span class="op">$</span><span class="va">ID</span>, orgdb<span class="op">=</span><span class="st">"org.Hs.eg.db"</span>, ont<span class="op">=</span><span class="st">"BP"</span>, method<span class="op">=</span><span class="st">"Rel"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">go_analysis</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.delim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/example.txt"</span>, package<span class="op">=</span><span class="st">"rrvgo"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">simMatrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="calculateSimMatrix.html">calculateSimMatrix</a></span><span class="op">(</span><span class="va">go_analysis</span><span class="op">$</span><span class="va">ID</span>, orgdb<span class="op">=</span><span class="st">"org.Hs.eg.db"</span>, ont<span class="op">=</span><span class="st">"BP"</span>, method<span class="op">=</span><span class="st">"Rel"</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> preparing gene to GO mapping data...</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> preparing IC data...</span>
-<span class="r-in"><span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">go_analysis</span><span class="op">$</span><span class="va">qvalue</span><span class="op">)</span>, <span class="va">go_analysis</span><span class="op">$</span><span class="va">ID</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">reducedTerms</span> <span class="op">&lt;-</span> <span class="fu">reduceSimMatrix</span><span class="op">(</span><span class="va">simMatrix</span>, <span class="va">scores</span>, threshold<span class="op">=</span><span class="fl">0.7</span>, orgdb<span class="op">=</span><span class="st">"org.Hs.eg.db"</span><span class="op">)</span></span>
+<span class="r-in"><span><span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">go_analysis</span><span class="op">$</span><span class="va">qvalue</span><span class="op">)</span>, <span class="va">go_analysis</span><span class="op">$</span><span class="va">ID</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">reducedTerms</span> <span class="op">&lt;-</span> <span class="fu">reduceSimMatrix</span><span class="op">(</span><span class="va">simMatrix</span>, <span class="va">scores</span>, threshold<span class="op">=</span><span class="fl">0.7</span>, orgdb<span class="op">=</span><span class="st">"org.Hs.eg.db"</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -119,7 +130,7 @@ the same group).</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
