@@ -80,3 +80,8 @@ or access the [pkgdown documentation](https://ssayols.github.io/rrvgo/index.html
 * [org.Sc.sgd.db](http://bioconductor.org/packages/org.Sc.sgd.db/): Genome wide annotation for Yeast.
 * [org.Ss.eg.db](http://bioconductor.org/packages/org.Ss.eg.db/): Genome wide annotation for Pig.
 * [org.Xl.eg.db](http://bioconductor.org/packages/org.Xl.eg.db/): Genome wide annotation for Xenopus.
+
+## Citation
+
+Sayols, S (2023). rrvgo: a Bioconductor package for interpreting lists of Gene Ontology terms. microPublication Biology. [doi: 10.17912/micropub.biology.000811](http://dx.doi.org/10.17912/micropub.biology.000811).
+

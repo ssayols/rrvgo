@@ -1,6 +1,8 @@
-citEntry(entry="Manual",
+citEntry(entry="Article",
          title = "rrvgo: a Bioconductor package to reduce and visualize Gene Ontology terms",
          author = personList(as.person("Sergi Sayols")),
-         year = 2020,
-         url="https://ssayols.github.io/rrvgo",
-         textVersion = "Sergi Sayols (2020). rrvgo: a Bioconductor package to reduce and visualize Gene Ontology terms")
+         year = 2023,
+         journal = "microPublication Biology",
+         doi = "10.17912/micropub.biology.000811",
+         url="https://www.micropublication.org/journals/biology/micropub-biology-000811",
+         textVersion = "Sayols, S (2023). rrvgo: a Bioconductor package for interpreting lists of Gene Ontology terms. microPublication Biology. 10.17912/micropub.biology.000811")
