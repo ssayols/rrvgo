@@ -54,7 +54,7 @@ Reduce a set of GO terms based on their semantic similarity and scores.</p>
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">reduceSimMatrix</span><span class="op">(</span></span>
 <span>  <span class="va">simMatrix</span>,</span>
-<span>  scores <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  scores <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"uniqueness"</span>, <span class="st">"size"</span><span class="op">)</span>,</span>
 <span>  threshold <span class="op">=</span> <span class="fl">0.7</span>,</span>
 <span>  <span class="va">orgdb</span>,</span>
 <span>  keytype <span class="op">=</span> <span class="st">"ENTREZID"</span></span>
@@ -68,10 +68,11 @@ Reduce a set of GO terms based on their semantic similarity and scores.</p>
 
 
 <dt>scores</dt>
-<dd><p>*named* vector with scores (weights) assigned to each term.
-Higher is better. Can be NULL (default, means no scores. In this case, a default score
-based on set size is assigned, thus favoring larger sets). Note: if you have
-p-values as scores, consider -1*log-transforming them (`-log(p)`)</p></dd>
+<dd><p>one of c("uniqueness", "size"), or a *named* vector with scores
+provided for each term, where higher values favor choosing the term as the
+cluster representative. The default "uniqueness" uses a score reflecting how
+unique the term is. Note: if you like to use p-values as scores, consider
+-1*log-transforming them (`-log(p)`)</p></dd>
 
 
 <dt>threshold</dt>
@@ -94,7 +95,9 @@ associated to gene ids in your orgdb</p></dd>
     <h2>Value</h2>
     
 
-<p>a data.frame with all terms and it's "reducer" (NA if the term was not reduced)</p>
+<p>a data.frame identifying the different clusters of terms, the parent
+term representing the cluster, and some metrics of importance describing how
+unique and dispensable a term is.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
