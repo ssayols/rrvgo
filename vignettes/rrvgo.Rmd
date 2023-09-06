@@ -87,12 +87,13 @@ reducedTerms <- reduceSimMatrix(simMatrix,
                                 orgdb="org.Hs.eg.db")
 ```
 
-`reduceSimMatrix` selects as the group representative the term with the higher
-score within the group. In case the vector of scores is not available,
-`reduceSimMatrix` will get the GO term size from the `OrgDb` object and use it
-as the score, thus favoring broader terms. **Please note that scores are
-interpreted in the direction that higher are better**, therefore if you use
-p-values as scores, minus log-transform them before.
+`reduceSimMatrix` selects as the group representative the term with the higher 
+score within the group. In case the vector of scores is not available, 
+`reduceSimMatrix` can either use the *uniqueness* of a term (default), or the 
+GO term *size*. In this case, `rrvgo` will fetch the GO term size from the 
+`OrgDb` object and use it as the score, thus favoring broader terms. **Please 
+note that scores are interpreted in the direction that higher are better**, 
+therefore if you use p-values as scores, minus log-transform them before.
 
 Higher thresholds force higher similarity between terms of a groups, resulting
 in more groups containing less similar terms.

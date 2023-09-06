@@ -15,6 +15,11 @@ test_that("reducedSimMatrix draws all parents from list", {
 
 test_that("reducedSimMatrix column types", {
   expect_is(reducedTerms$cluster, "integer")
-  expect_is(reducedTerms$parentSimScore, "numeric")
+  expect_is(reducedTerms$termUniqueness, "numeric")
+  expect_is(reducedTerms$termDispensability, "numeric")
   expect_is(reducedTerms$size, "numeric")
+})
+
+test_that("Term uniquness and despisablility are anti-correlated",{
+  expect_true(cor(reducedTerms$termUniqueness, reducedTerms$termDispensability) < 0)
 })

@@ -7,7 +7,7 @@ Reduce a set of GO terms based on their semantic similarity and scores.}
 \usage{
 reduceSimMatrix(
   simMatrix,
-  scores = NULL,
+  scores = c("uniqueness", "size"),
   threshold = 0.7,
   orgdb,
   keytype = "ENTREZID"
@@ -16,10 +16,11 @@ reduceSimMatrix(
 \arguments{
 \item{simMatrix}{a (square) similarity matrix}
 
-\item{scores}{*named* vector with scores (weights) assigned to each term.
-Higher is better. Can be NULL (default, means no scores. In this case, a default score
-based on set size is assigned, thus favoring larger sets). Note: if you have
-p-values as scores, consider -1*log-transforming them (`-log(p)`)}
+\item{scores}{one of c("uniqueness", "size"), or a *named* vector with scores
+provided for each term, where higher values favor choosing the term as the
+cluster representative. The default "uniqueness" uses a score reflecting how
+unique the term is. Note: if you like to use p-values as scores, consider
+-1*log-transforming them (`-log(p)`)}
 
 \item{threshold}{similarity threshold (0-1). Some guidance:
 Large (allowed similarity=0.9), Medium (0.7), Small (0.5), Tiny (0.4)
@@ -32,7 +33,9 @@ orgdb object itself)}
 associated to gene ids in your orgdb}
 }
 \value{
-a data.frame with all terms and it's "reducer" (NA if the term was not reduced)
+a data.frame identifying the different clusters of terms, the parent
+term representing the cluster, and some metrics of importance describing how
+unique and dispensable a term is.
 }
 \description{
 reduceSimMatrix

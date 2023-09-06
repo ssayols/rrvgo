@@ -77,10 +77,11 @@ calculateSimMatrix <- function(x,
 #' the same group).
 #' 
 #' @param simMatrix a (square) similarity matrix
-#' @param scores *named* vector with scores (weights) assigned to each term.
-#'   Higher is better. Can be NULL (default, means no scores. In this case, a default score
-#'   based on set size is assigned, thus favoring larger sets). Note: if you have
-#'   p-values as scores, consider -1*log-transforming them (`-log(p)`)
+#' @param scores one of c("uniqueness", "size"), or a *named* vector with scores
+#'   provided for each term, where higher values favor choosing the term as the
+#'   cluster representative. The default "uniqueness" uses a score reflecting how
+#'   unique the term is. Note: if you like to use p-values as scores, consider
+#'   -1*log-transforming them (`-log(p)`)
 #' @param threshold similarity threshold (0-1). Some guidance:
 #'  Large (allowed similarity=0.9), Medium (0.7), Small (0.5), Tiny (0.4)
 #'  Defaults to Medium (0.7)
@@ -88,7 +89,9 @@ calculateSimMatrix <- function(x,
 #'   orgdb object itself)
 #' @param keytype keytype passed to AnnotationDbi::keys to retrieve GO terms 
 #'   associated to gene ids in your orgdb
-#' @return a data.frame with all terms and it's "reducer" (NA if the term was not reduced)
+#' @return a data.frame identifying the different clusters of terms, the parent
+#' term representing the cluster, and some metrics of importance describing how
+#' unique and dispensable a term is.
 #' @examples
 #' go_analysis <- read.delim(system.file("extdata/example.txt", package="rrvgo"))
 #' simMatrix <- calculateSimMatrix(go_analysis$ID, orgdb="org.Hs.eg.db", ont="BP", method="Rel")
@@ -96,46 +99,94 @@ calculateSimMatrix <- function(x,
 #' reducedTerms <- reduceSimMatrix(simMatrix, scores, threshold=0.7, orgdb="org.Hs.eg.db")
 #' @importFrom stats cutree hclust
 #' @export
-reduceSimMatrix <- function(simMatrix, scores=NULL, threshold=0.7, orgdb, keytype="ENTREZID") {
+reduceSimMatrix <- function(simMatrix, scores=c("uniqueness", "size"),
+                            threshold=0.7, orgdb, keytype="ENTREZID") {
  
   # check function arguments
-  if(!is.null(scores) && !all(rownames(simMatrix) %in% names(scores))) {
-    stop("Scores vector does not contain all terms in the similarity matrix")
+  if(length(scores) == 1) {
+    scores <- match.arg(scores)
+  } else {
+    stopifnot("Scores vector does not contain all terms in the similarity matrix" = all(rownames(simMatrix) %in% names(scores)))
   }
 
-  # get category size, and use it as scores if they were not provided
-  sizes <- getGoSize(rownames(simMatrix), orgdb, keytype)
-  if(is.null(scores)) {
-    message("No scores provided. Falling back to term's size")
-    scores <- sizes
+  # cluster terms and cut the tree at the desired threshold.
+  cluster <- cutree(hclust(as.dist(1 - simMatrix)), h=threshold)
+
+  # get category size and term uniqueness, and use it as scores if they were not provided
+  sizes    <- getGoSize(rownames(simMatrix), orgdb, keytype)
+  termUniq <- getTermUniq(simMatrix, cluster)
+  if(length(scores) == 1) {
+    scores <- switch(scores,
+                     uniqueness={ message("No scores provided. Falling back to term's uniqueness"); termUniq },
+                     size      ={ message("No scores provided. Falling back to term's GO size"); sizes })
   }
+  scores <- scores[match(rownames(simMatrix), names(scores))]   # shortlist scores for terms present in the simMatrix
   
-  scores <- scores[match(rownames(simMatrix), names(scores))]
-  
-  # reorder the similarity matrix as in the scores, just in case they don't come in the same order
-  orows <- match(rownames(simMatrix), names(scores))
-  ocols <- match(colnames(simMatrix), names(scores))
+  # reorder the similarity matrix as to match the order in the scores vector
+  orows <- match(names(scores), rownames(simMatrix))
+  ocols <- match(names(scores), colnames(simMatrix))
   simMatrix <- simMatrix[orows, ocols]
   
   # sort matrix based on the score
-  o <- rev(order(scores, sizes, na.last=FALSE))
+  o <- rev(order(scores, termUniq, na.last=FALSE))
+  scores    <- scores[o]
   simMatrix <- simMatrix[o, o]
   
-  # cluster terms and cut the tree at the desired threshold.
-  # Then find the term with the highest score as the representative of each cluster
-  cluster <- cutree(hclust(as.dist(1-simMatrix)), h=threshold)
+  # finally, find the term with the highest score as the representative of each cluster
   clusterRep <- tapply(rownames(simMatrix), cluster, function(x) x[which.max(scores[x])])
   
   # return
-  data.frame(go=rownames(simMatrix),
-             cluster=cluster,
-             parent=clusterRep[cluster],
-             parentSimScore=unlist(Map(seq_len(nrow(simMatrix)), clusterRep[cluster], f=function(i, j) simMatrix[i, j])),
-             score=scores[match(rownames(simMatrix), names(scores))],
-             size=sizes[match(rownames(simMatrix), names(sizes))],
-             term=getGoTerm(rownames(simMatrix)),
-             parentTerm=getGoTerm(clusterRep[cluster]))
+  data.frame(go                =rownames(simMatrix),
+             cluster           =cluster,
+             parent            =clusterRep[cluster],
+             score             =scores[match(rownames(simMatrix), names(scores))],
+             size              =sizes[match(rownames(simMatrix), names(sizes))],
+             term              =getGoTerm(rownames(simMatrix)),
+             parentTerm        =getGoTerm(clusterRep[cluster]),
+             termUniqueness    =getTermUniq(simMatrix),
+             termUniquenessWithinCluster=termUniq,
+             termDispensability=getTermDisp(simMatrix, cluster, clusterRep))
 }
+
+#' getTermUniq
+#' Calculate the term uniqueness score, defined as 1 minus the average semantic
+#' similarity of a term to all other terms.
+#' 
+#' @param simMatrix a (square) similarity matrix
+#' @param cluster vector with the cluster each entry in the simMatrix belongs to.
+#'    If NULL, a 
+#' @return a vector of term uniqueness scores
+getTermUniq <- function(simMatrix, cluster=NULL) {
+  diag(simMatrix) <- 0    # parent terms are completely unique (considered not similar to themselves)
+  if(is.null(cluster)) {  # global uniqueness, comparing to all terms regardless of the cluster they belong to
+    1 - apply(simMatrix, 1, mean, na.rm=TRUE)
+  } else {                # local uniqueness within the cluster
+    x <- tapply(names(cluster), cluster, function(x) getTermUniq(simMatrix[x, x, drop=FALSE]), simplify=FALSE)
+    names(x) <- NULL
+    x <- unlist(x)
+    x[rownames(simMatrix)]
+  }
+}
+
+#' getTermDisp
+#' Calculate the term dispensability score, defined as the semantic similarity
+#' threshold a term was assigned to a cluster (namely, the similarity of a term
+#' to the cluster representative term).
+#' 
+#' @param simMatrix a (square) similarity matrix
+#' @param cluster the cluster assignment for each term
+#' @param clusterRep the cluster representative term
+#' @return a vector of term dispensability scores
+getTermDisp <- function(simMatrix, cluster, clusterRep) {
+  unlist(Map(rownames(simMatrix), cluster, f=function(term, cluster) {
+    if(term != clusterRep[cluster]) {
+      simMatrix[term, clusterRep[cluster]]
+    } else {
+      0       # parent terms are not dispensable
+    }
+  }))
+}
+
 
 #' getGoSize
 #' Get GO term size (# of genes)
