@@ -1,7 +1,7 @@
 Package: rrvgo
 Type: Package
 Title: Reduce + Visualize GO
-Version: 1.10.1
+Version: 1.12.1
 Authors@R: person("Sergi", "Sayols", email = "sergisayolspuig@gmail.com", role = c("aut", "cre"))
 Author: Sergi Sayols [aut, cre]
 Maintainer: Sergi Sayols <sergisayolspuig@gmail.com>
