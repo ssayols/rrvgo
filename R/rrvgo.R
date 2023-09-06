@@ -103,7 +103,7 @@ reduceSimMatrix <- function(simMatrix, scores=c("uniqueness", "size"),
                             threshold=0.7, orgdb, keytype="ENTREZID") {
  
   # check function arguments
-  if(length(scores) == 1) {
+  if(is(scores, "character")) {
     scores <- match.arg(scores)
   } else {
     stopifnot("Scores vector does not contain all terms in the similarity matrix" = all(rownames(simMatrix) %in% names(scores)))
@@ -115,24 +115,20 @@ reduceSimMatrix <- function(simMatrix, scores=c("uniqueness", "size"),
   # get category size and term uniqueness, and use it as scores if they were not provided
   sizes    <- getGoSize(rownames(simMatrix), orgdb, keytype)
   termUniq <- getTermUniq(simMatrix, cluster)
-  if(length(scores) == 1) {
+  if(is(scores, "character")) {
     scores <- switch(scores,
                      uniqueness={ message("No scores provided. Falling back to term's uniqueness"); termUniq },
                      size      ={ message("No scores provided. Falling back to term's GO size"); sizes })
   }
-  scores <- scores[match(rownames(simMatrix), names(scores))]   # shortlist scores for terms present in the simMatrix
+  scores <- scores[match(rownames(simMatrix), names(scores))]   # shortlist + order scores for terms present in the simMatrix
   
-  # reorder the similarity matrix as to match the order in the scores vector
-  orows <- match(names(scores), rownames(simMatrix))
-  ocols <- match(names(scores), colnames(simMatrix))
-  simMatrix <- simMatrix[orows, ocols]
-  
-  # sort matrix based on the score
+  # sort everything based on the score
   o <- rev(order(scores, termUniq, na.last=FALSE))
   scores    <- scores[o]
   simMatrix <- simMatrix[o, o]
   
   # finally, find the term with the highest score as the representative of each cluster
+  cluster    <- cluster[match(rownames(simMatrix), names(cluster))]   # reorder the cluster vector to match row order in the simMatrix
   clusterRep <- tapply(rownames(simMatrix), cluster, function(x) x[which.max(scores[x])])
   
   # return
@@ -144,7 +140,7 @@ reduceSimMatrix <- function(simMatrix, scores=c("uniqueness", "size"),
              term              =getGoTerm(rownames(simMatrix)),
              parentTerm        =getGoTerm(clusterRep[cluster]),
              termUniqueness    =getTermUniq(simMatrix),
-             termUniquenessWithinCluster=termUniq,
+             termUniquenessWithinCluster=getTermUniq(simMatrix, cluster),
              termDispensability=getTermDisp(simMatrix, cluster, clusterRep))
 }
 
