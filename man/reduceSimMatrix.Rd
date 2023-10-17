@@ -42,9 +42,9 @@ reduceSimMatrix
 Reduce a set of GO terms based on their semantic similarity and scores.
 }
 \details{
-Remove terms with a similarity below `threshold`. Decide which term
-remains based on a score. If no score is provided, then decide based on the
-"uniqueness" or the term "size".
+Group terms which are at least within a similarity below `threshold`. Decide 
+which term remains based on a score. If no score is provided, then decide based 
+on the "uniqueness" or the term "size".
 
 Currently, rrvgo uses the similarity between pairs of terms to compute a 
 distance matrix, defined as (1-simMatrix). The terms are then hierarchically 
