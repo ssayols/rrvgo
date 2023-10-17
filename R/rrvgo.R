@@ -66,15 +66,17 @@ calculateSimMatrix <- function(x,
 #' Reduce a set of GO terms based on their semantic similarity and scores.
 #' 
 #' @details
+#' Remove terms with a similarity below `threshold`. Decide which term
+#' remains based on a score. If no score is provided, then decide based on the
+#' "uniqueness" or the term "size".
+#'
 #' Currently, rrvgo uses the similarity between pairs of terms to compute a 
 #' distance matrix, defined as (1-simMatrix). The terms are then hierarchically 
 #' clustered using complete linkage, and the tree is cut at the desired threshold, 
 #' picking the term with the highest score as the representative of each group.  
 #' 
 #' Therefore, higher thresholds lead to fewer groups, and the threshold should be 
-#' read as the expected similarity of terms within a group (though this is not 
-#' entirely correct, and you'll see similarities below this threshold being put in 
-#' the same group).
+#' read as the minimum similarity between group representatives.
 #' 
 #' @param simMatrix a (square) similarity matrix
 #' @param scores one of c("uniqueness", "size"), or a *named* vector with scores
