@@ -1,3 +1,12 @@
+Changes in version 1.10.2
+-------------------------
+
+    * Welcome two important contributions by Sara Elmeligy! Sara implemented the uniqueness and dispensability terms
+    * `reducedSimMatrix()` outputs now the uniqueness and dispensability terms
+    * The column termDispensability replaces the current parentSimScore. They're equivalent
+    * `reducedSimMatrix()` now defaults to using the "uniqueness" if no vector of scores are provided
+    * Some minor fixes
+
 Changes in version 1.10.1
 -------------------------
 
