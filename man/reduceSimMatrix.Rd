@@ -10,7 +10,8 @@ reduceSimMatrix(
   scores = c("uniqueness", "size"),
   threshold = 0.7,
   orgdb,
-  keytype = "ENTREZID"
+  keytype = "ENTREZID",
+  children = TRUE
 )
 }
 \arguments{
@@ -31,6 +32,9 @@ orgdb object itself)}
 
 \item{keytype}{keytype passed to AnnotationDbi::keys to retrieve GO terms 
 associated to gene ids in your orgdb}
+
+\item{children}{when retrieving GO term size, include genes in children terms.
+(based on relationships in the GO DAG hierarchy). Defaults to TRUE}
 }
 \value{
 a data.frame identifying the different clusters of terms, the parent

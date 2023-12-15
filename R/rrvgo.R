@@ -91,6 +91,8 @@ calculateSimMatrix <- function(x,
 #'   orgdb object itself)
 #' @param keytype keytype passed to AnnotationDbi::keys to retrieve GO terms 
 #'   associated to gene ids in your orgdb
+#' @param children when retrieving GO term size, include genes in children terms.
+#'   (based on relationships in the GO DAG hierarchy). Defaults to TRUE
 #' @return a data.frame identifying the different clusters of terms, the parent
 #' term representing the cluster, and some metrics of importance describing how
 #' unique and dispensable a term is.
@@ -102,7 +104,7 @@ calculateSimMatrix <- function(x,
 #' @importFrom stats cutree hclust
 #' @export
 reduceSimMatrix <- function(simMatrix, scores=c("uniqueness", "size"),
-                            threshold=0.7, orgdb, keytype="ENTREZID") {
+                            threshold=0.7, orgdb, keytype="ENTREZID", children=TRUE) {
  
   # check function arguments
   if(is(scores, "character")) {
@@ -115,7 +117,7 @@ reduceSimMatrix <- function(simMatrix, scores=c("uniqueness", "size"),
   cluster <- cutree(hclust(as.dist(1 - simMatrix)), h=threshold)
 
   # get category size and term uniqueness, and use it as scores if they were not provided
-  sizes    <- getGoSize(rownames(simMatrix), orgdb, keytype)
+  sizes    <- getGoSize(rownames(simMatrix), orgdb, keytype, children)
   termUniq <- getTermUniq(simMatrix, cluster)
   if(is(scores, "character")) {
     scores <- switch(scores,
@@ -194,27 +196,22 @@ getTermDisp <- function(simMatrix, cluster, clusterRep) {
 #'   package itself)
 #' @param keytype keytype passed to AnnotationDbi::keys to retrieve GO terms 
 #'   associated to gene ids in your orgdb
+#' @param children include genes in children terms (based on relationships in
+#'  the GO DAG hierarchy)
 #' @importFrom AnnotationDbi select keys
 #' @importFrom stats setNames
 #' @importFrom methods is
 #' @return number of genes associated with each term
-getGoSize <- function(terms, orgdb, keytype) {
+getGoSize <- function(terms, orgdb, keytype, children) {
   if(all(is(orgdb) != "OrgDb")) {
     orgdb <- loadOrgdb(orgdb)
   }
   
-  # get all GO terms with genes associated
-  go <- suppressMessages(
-          AnnotationDbi::select(orgdb,
-                                keytype=keytype,
-                                columns=c("GO", "ONTOLOGY"),
-                                keys=AnnotationDbi::keys(orgdb, keytype=keytype)))
-  go <- go[!is.na(go$GO), ]
-  go <- go[go$GO %in% terms, ]
+  # retrieve genes per term and count unique genes within each term
+  go <- AnnotationDbi::select(orgdb, keytype=if(children) "GOALL" else "GO", keys=terms, columns=keytype)
   
   # count
-  counts   <- table(go$GO)
-  go <- go[go$GO %in% terms, ]
+  counts   <- tapply(go$ENTREZID, go$GO, function(x) length(unique(x)))
   empty    <- terms[!(terms %in% names(counts))]
   nocounts <- setNames(rep(0, length(empty)), empty)
   

@@ -5,7 +5,7 @@
 \title{getGoSize
 Get GO term size (# of genes)}
 \usage{
-getGoSize(terms, orgdb, keytype)
+getGoSize(terms, orgdb, keytype, children)
 }
 \arguments{
 \item{terms}{GO terms}
@@ -15,6 +15,9 @@ package itself)}
 
 \item{keytype}{keytype passed to AnnotationDbi::keys to retrieve GO terms 
 associated to gene ids in your orgdb}
+
+\item{children}{include genes in children terms (based on relationships in
+the GO DAG hierarchy)}
 }
 \value{
 number of genes associated with each term

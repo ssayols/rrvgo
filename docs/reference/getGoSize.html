@@ -20,7 +20,7 @@ Get GO term size (# of genes)"><!-- mathjax --><script src="https://cdnjs.cloudf
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rrvgo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.13.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.1</span>
       </span>
     </div>
 
@@ -52,7 +52,7 @@ Get GO term size (# of genes)</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getGoSize</span><span class="op">(</span><span class="va">terms</span>, <span class="va">orgdb</span>, <span class="va">keytype</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">getGoSize</span><span class="op">(</span><span class="va">terms</span>, <span class="va">orgdb</span>, <span class="va">keytype</span>, <span class="va">children</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -69,6 +69,11 @@ package itself)</p></dd>
 <dt>keytype</dt>
 <dd><p>keytype passed to AnnotationDbi::keys to retrieve GO terms 
 associated to gene ids in your orgdb</p></dd>
+
+
+<dt>children</dt>
+<dd><p>include genes in children terms (based on relationships in
+the GO DAG hierarchy)</p></dd>
 
 </dl></div>
     <div id="value">

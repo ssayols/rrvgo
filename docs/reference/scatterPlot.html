@@ -20,7 +20,7 @@ Plot GO terms as scattered points."><!-- mathjax --><script src="https://cdnjs.c
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rrvgo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.13.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.1</span>
       </span>
     </div>
 
@@ -124,6 +124,7 @@ of genes the GO term contains.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> preparing IC data...</span>
 <span class="r-in"><span><span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">go_analysis</span><span class="op">$</span><span class="va">qvalue</span><span class="op">)</span>, <span class="va">go_analysis</span><span class="op">$</span><span class="va">ID</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">reducedTerms</span> <span class="op">&lt;-</span> <span class="fu"><a href="reduceSimMatrix.html">reduceSimMatrix</a></span><span class="op">(</span><span class="va">simMatrix</span>, <span class="va">scores</span>, threshold<span class="op">=</span><span class="fl">0.7</span>, orgdb<span class="op">=</span><span class="st">"org.Hs.eg.db"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 'select()' returned 1:many mapping between keys and columns</span>
 <span class="r-in"><span><span class="fu">scatterPlot</span><span class="op">(</span><span class="va">simMatrix</span>, <span class="va">reducedTerms</span><span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>ggrepel: 9 unlabeled data points (too many overlaps). Consider increasing max.overlaps</span>
 <span class="r-plt img"><img src="scatterPlot-1.png" alt="" width="700" height="433"></span>

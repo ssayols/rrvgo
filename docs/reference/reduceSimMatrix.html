@@ -20,7 +20,7 @@ Reduce a set of GO terms based on their semantic similarity and scores."><!-- ma
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rrvgo</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.13.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.15.1</span>
       </span>
     </div>
 
@@ -57,7 +57,8 @@ Reduce a set of GO terms based on their semantic similarity and scores.</p>
 <span>  scores <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"uniqueness"</span>, <span class="st">"size"</span><span class="op">)</span>,</span>
 <span>  threshold <span class="op">=</span> <span class="fl">0.7</span>,</span>
 <span>  <span class="va">orgdb</span>,</span>
-<span>  keytype <span class="op">=</span> <span class="st">"ENTREZID"</span></span>
+<span>  keytype <span class="op">=</span> <span class="st">"ENTREZID"</span>,</span>
+<span>  children <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -90,6 +91,11 @@ orgdb object itself)</p></dd>
 <dd><p>keytype passed to AnnotationDbi::keys to retrieve GO terms 
 associated to gene ids in your orgdb</p></dd>
 
+
+<dt>children</dt>
+<dd><p>when retrieving GO term size, include genes in children terms.
+(based on relationships in the GO DAG hierarchy). Defaults to TRUE</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
@@ -120,6 +126,7 @@ read as the minimum similarity between group representatives.</p>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> preparing IC data...</span>
 <span class="r-in"><span><span class="va">scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/setNames.html" class="external-link">setNames</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">go_analysis</span><span class="op">$</span><span class="va">qvalue</span><span class="op">)</span>, <span class="va">go_analysis</span><span class="op">$</span><span class="va">ID</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">reducedTerms</span> <span class="op">&lt;-</span> <span class="fu">reduceSimMatrix</span><span class="op">(</span><span class="va">simMatrix</span>, <span class="va">scores</span>, threshold<span class="op">=</span><span class="fl">0.7</span>, orgdb<span class="op">=</span><span class="st">"org.Hs.eg.db"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> 'select()' returned 1:many mapping between keys and columns</span>
 </code></pre></div>
     </div>
   </div>
