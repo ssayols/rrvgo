@@ -1,7 +1,7 @@
 Package: rrvgo
 Type: Package
 Title: Reduce + Visualize GO
-Version: 1.15.1
+Version: 1.15.2
 Authors@R: c(person("Sergi", "Sayols", email = "sergisayolspuig@gmail.com", role = c("aut", "cre")), person("Sara", "Elmeligy", role = "ctb"))
 Description: Reduce and visualize lists of Gene Ontology terms by identifying redudance based on semantic similarity.
 URL: https://www.bioconductor.org/packages/rrvgo, https://ssayols.github.io/rrvgo/index.html
