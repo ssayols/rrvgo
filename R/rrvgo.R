@@ -211,7 +211,7 @@ getGoSize <- function(terms, orgdb, keytype, children) {
   go <- AnnotationDbi::select(orgdb, keytype=if(children) "GOALL" else "GO", keys=terms, columns=keytype)
   
   # count
-  counts   <- tapply(go$ENTREZID, go$GO, function(x) length(unique(x)))
+  counts   <- tapply(go[[keytype]], go[[if(children) "GOALL" else "GO"]], function(x) length(unique(x)))
   empty    <- terms[!(terms %in% names(counts))]
   nocounts <- setNames(rep(0, length(empty)), empty)
   
