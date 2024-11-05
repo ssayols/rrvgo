@@ -70,7 +70,7 @@ shinyApp(
           ),
           box(width=NULL, title="Plot options", status="warning",
             uiOutput("plotOptions")
-          )
+          )#{{Impressum-placeholder}}
         ),
         column(width=9,
           tabBox(id="plots", width=NULL,

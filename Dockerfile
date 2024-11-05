@@ -22,6 +22,9 @@ RUN R --slave -e 'install.packages(c("devtools", "shiny", "shinydashboard"))' &&
     R --slave -e 'BiocManager::install("rrvgo")' && \
     R --slave -e 'file.copy(system.file("shiny_rrvgo", package="rrvgo"), "/srv/shiny-server/", recursive=TRUE)'
 
+# Add Impressum to apps
+RUN sed -i 's|#{{Impressum-placeholder}}|, p(style="text-align: right;", a("Institute of Molecular Biology gGmbH", href="https://imb.de/", target="_blank")), p(style="text-align: right;", a("Impressum - Imprint", href="https://imb.de/impressum-imprint", target="_blank"))|' /srv/shiny-server/shiny_rrvgo/app.R
+
 # Setup permissions
 RUN chown -R shiny:shiny /var/lib/shiny-server && \
     sed -i 's/directory_index on/directory_index off/' /etc/shiny-server/shiny-server.conf && \
