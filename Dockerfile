@@ -21,7 +21,7 @@ RUN R --slave -e 'install.packages(c("devtools", "shiny", "shinydashboard"))' &&
     R --slave -e 'BiocManager::install(c("org.Ag.eg.db", "org.At.tair.db", "org.Bt.eg.db", "org.Ce.eg.db", "org.Cf.eg.db", "org.Dm.eg.db", "org.Dr.eg.db", "org.EcK12.eg.db", "org.EcSakai.eg.db", "org.Gg.eg.db", "org.Hs.eg.db", "org.Mm.eg.db", "org.Mmu.eg.db", "org.Pt.eg.db", "org.Rn.eg.db", "org.Sc.sgd.db", "org.Ss.eg.db", "org.Xl.eg.db"))' && \
     R --slave -e 'BiocManager::install("rrvgo")' && \
     R --slave -e 'file.copy(system.file("shiny_rrvgo", package="rrvgo"), "/srv/shiny-server/", recursive=TRUE)' && \
-    sed -i 's|#{{Impressum-placeholder}}|, p(style="text-align: right;", a("Institute of Molecular Biology gGmbH", href="https://imb.de/", target="_blank")), p(style="text-align: right;", a("Impressum - Imprint", href="https://imb.de/impressum-imprint", target="_blank"))|' /srv/shiny-server/shiny_rrvgo/app.R
+    sed -i 's|#{{Impressum-placeholder}}|, p(style="text-align: right;", a("the Institute of Molecular Biology (IMB) in Mainz", href="https://imb.de/", target="_blank")), p(style="text-align: right;", a("Impressum - Imprint", href="https://imb.de/impressum-imprint", target="_blank"))|' /srv/shiny-server/shiny_rrvgo/app.R
 
 # Setup permissions
 RUN chown -R shiny:shiny /var/lib/shiny-server && \
