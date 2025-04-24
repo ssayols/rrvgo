@@ -55,6 +55,6 @@ Suggests:
     org.Ss.eg.db,
     org.Xl.eg.db
 VignetteBuilder: knitr
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 biocViews: Annotation, Clustering, GO, Network, Pathways, Software
 NeedsCompilation: no

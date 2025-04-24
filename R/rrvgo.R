@@ -198,13 +198,26 @@ getTermDisp <- function(simMatrix, cluster, clusterRep) {
 #'   associated to gene ids in your orgdb
 #' @param children include genes in children terms (based on relationships in
 #'  the GO DAG hierarchy)
-#' @importFrom AnnotationDbi select keys
+#' @importFrom AnnotationDbi select keys keytypes
 #' @importFrom stats setNames
 #' @importFrom methods is
 #' @return number of genes associated with each term
 getGoSize <- function(terms, orgdb, keytype, children) {
   if(all(is(orgdb) != "OrgDb")) {
     orgdb <- loadOrgdb(orgdb)
+  }
+
+  # check if there's a GOALL slot to retrieve children terms
+  if(children && !("GOALL" %in% keytypes(orgdb))) {
+    warning("No keytype named GOALL found in orgdb object. Setting children=FALSE.")
+    children <- FALSE
+  }
+  
+  # check if there's a GOALL slot to retrieve children terms
+  if(!children && !("GO" %in% keytypes(orgdb))) {
+    stop("No keytype named GO found in orgdb object.",
+         "Check `AnnotationDbi::keytypes()` in orgdb object and ensure there's a GO keytype.",
+         "Alternatively, call the function with `children=TRUE`.")
   }
   
   # retrieve genes per term and count unique genes within each term
