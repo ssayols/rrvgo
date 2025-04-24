@@ -1,3 +1,8 @@
+Changes in version 1.21.1
+-------------------------
+
+    * Add warning when using children=TRUE in `reduceSimMatrix()` and no keytype named GOALL in the Orgdb object
+
 Changes in version 1.10.2
 -------------------------
 
