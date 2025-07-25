@@ -7,9 +7,12 @@
 #' @param keytype keytype passed to AnnotationDbi::keys to retrieve GO terms 
 #'   associated to gene ids in your orgdb
 #' @param semdata object with prepared GO DATA for measuring semantic similarity
-#' @param ont ontlogy. One of c("BP", "MF", "CC")
+#' @param ont ontology. One of c("BP", "MF", "CC")
 #' @param method distance method. One of the supported methods by GOSemSim:
 #'   c("Resnik", "Lin", "Rel", "Jiang", "Wang")
+#' @param include_terms_without_IC whether to include terms for which there's no
+#'   Information Content in OrgDb. NOTE: Including them can mess up with the
+#'   algorithm that aggregates the distances. Default: FALSE.
 #' @return a square matrix with similarity scores between terms
 #' @details 
 #' All similarity measures available are those implemented in the
@@ -28,7 +31,8 @@ calculateSimMatrix <- function(x,
                                keytype="ENTREZID",
                                semdata=GOSemSim::godata(annoDb=orgdb, ont=ont, keytype=keytype),
                                ont=c("BP", "MF", "CC"),
-                               method=c("Resnik", "Lin", "Rel", "Jiang", "Wang")) {
+                               method=c("Resnik", "Lin", "Rel", "Jiang", "Wang",
+                               include_terms_without_IC=FALSE)) {
  
   # check function args
   ont <- match.arg(ont) 
@@ -39,19 +43,20 @@ calculateSimMatrix <- function(x,
     orgdb <- loadOrgdb(orgdb)
   }
  
-  # filter GO terms not in orgdb
+  # filter GO terms without IC
   x <- unique(x)
   found <- x %in% names(semdata@IC)
-  hasAncestor <- !is.na(sapply(x, function(x) tryCatch(GOSemSim:::getAncestors(ont)[x], error=function(e) NA)))
   if(all(!found)) {
     warning("No terms were found in orgdb for ", ont,
             "\nCheck that the organism and ontology match the ones provided by orgdb")
     return(NA)
-  } else if(!all(found)) {
-    warning("Removed ", length(x) - sum(found), " terms that were not found in orgdb for ", ont)
+  } else if(!all(found) & !include_terms_without_IC) {
+    warning("Removed ", length(x) - sum(found), " terms without IC information in orgdb for ", ont)
+    x <- x[found]
   }
-  x <- x[found & hasAncestor]
-  
+
+  hasAncestor <- !is.na(sapply(x, function(x) tryCatch(GOSemSim:::getAncestors(ont)[x], error=function(e) NA)))
+  x <- x[hasAncestor]
  
   # return the similarity matrix
   m <- matrix(GOSemSim::goSim(x, x, semData=semdata, measure=method),

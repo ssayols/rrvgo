@@ -9,9 +9,9 @@ calculateSimMatrix(
   x,
   orgdb,
   keytype = "ENTREZID",
-  semdata = GOSemSim::godata(orgdb, ont = ont, keytype = keytype),
+  semdata = GOSemSim::godata(annoDb = orgdb, ont = ont, keytype = keytype),
   ont = c("BP", "MF", "CC"),
-  method = c("Resnik", "Lin", "Rel", "Jiang", "Wang")
+  method = c("Resnik", "Lin", "Rel", "Jiang", "Wang", include_terms_without_IC = FALSE)
 )
 }
 \arguments{
@@ -25,10 +25,14 @@ associated to gene ids in your orgdb}
 
 \item{semdata}{object with prepared GO DATA for measuring semantic similarity}
 
-\item{ont}{ontlogy. One of c("BP", "MF", "CC")}
+\item{ont}{ontology. One of c("BP", "MF", "CC")}
 
 \item{method}{distance method. One of the supported methods by GOSemSim:
 c("Resnik", "Lin", "Rel", "Jiang", "Wang")}
+
+\item{include_terms_without_IC}{whether to include terms for which there's no
+Information Content in OrgDb. NOTE: Including them can mess up with the
+algorithm that aggregates the distances. Default: FALSE.}
 }
 \value{
 a square matrix with similarity scores between terms

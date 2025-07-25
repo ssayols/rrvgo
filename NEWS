@@ -1,3 +1,9 @@
+Changes in version 1.21.3
+-------------------------
+
+    * Add new parameter to keep in the output of `calculateSimMatrix()` terms without Information Content (IC) (reported by GitHub user savagedude3. Thank you!)
+    * Fixed warning calling `calculateSimMatrix()` with default value for the `semdata` parameter (accurately detailed by GitHub user lahuuki. Thank you!)
+
 Changes in version 1.21.1
 -------------------------
 
