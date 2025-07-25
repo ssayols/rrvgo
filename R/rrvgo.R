@@ -31,8 +31,8 @@ calculateSimMatrix <- function(x,
                                keytype="ENTREZID",
                                semdata=GOSemSim::godata(annoDb=orgdb, ont=ont, keytype=keytype),
                                ont=c("BP", "MF", "CC"),
-                               method=c("Resnik", "Lin", "Rel", "Jiang", "Wang",
-                               include_terms_without_IC=FALSE)) {
+                               method=c("Resnik", "Lin", "Rel", "Jiang", "Wang"),
+                               include_terms_without_IC=FALSE) {
  
   # check function args
   ont <- match.arg(ont) 
