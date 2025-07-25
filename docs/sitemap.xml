@@ -1,63 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/404.html</loc>
-  </url>
-  <url>
-    <loc>/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/articles/rrvgo.html</loc>
-  </url>
-  <url>
-    <loc>/authors.html</loc>
-  </url>
-  <url>
-    <loc>/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/calculateSimMatrix.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getGoSize.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getGoTerm.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getTermDisp.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getTermUniq.html</loc>
-  </url>
-  <url>
-    <loc>/reference/gg_color_hue.html</loc>
-  </url>
-  <url>
-    <loc>/reference/heatmapPlot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/reference/loadOrgdb.html</loc>
-  </url>
-  <url>
-    <loc>/reference/reduceSimMatrix.html</loc>
-  </url>
-  <url>
-    <loc>/reference/scatterPlot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/shiny_rrvgo.html</loc>
-  </url>
-  <url>
-    <loc>/reference/treemapPlot.html</loc>
-  </url>
-  <url>
-    <loc>/reference/wordcloudPlot.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/LICENSE-text.html</loc></url>
+<url><loc>/articles/index.html</loc></url>
+<url><loc>/articles/rrvgo.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/reference/calculateSimMatrix.html</loc></url>
+<url><loc>/reference/getGoSize.html</loc></url>
+<url><loc>/reference/getGoTerm.html</loc></url>
+<url><loc>/reference/getTermDisp.html</loc></url>
+<url><loc>/reference/getTermUniq.html</loc></url>
+<url><loc>/reference/gg_color_hue.html</loc></url>
+<url><loc>/reference/heatmapPlot.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/loadOrgdb.html</loc></url>
+<url><loc>/reference/reduceSimMatrix.html</loc></url>
+<url><loc>/reference/scatterPlot.html</loc></url>
+<url><loc>/reference/shiny_rrvgo.html</loc></url>
+<url><loc>/reference/treemapPlot.html</loc></url>
+<url><loc>/reference/wordcloudPlot.html</loc></url>
 </urlset>
+
